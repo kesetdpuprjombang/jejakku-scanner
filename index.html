@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,14 +9,20 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f7eee9;
       text-align: center;
+      color: #4f403a;
     }
 
     .container {
+      width: 100%;
       max-width: 500px;
       margin: auto;
       padding: 30px 15px;
@@ -24,6 +31,15 @@
     h1 {
       color: #6b4f45;
       margin-bottom: 5px;
+      font-size: 34px;
+    }
+
+    h2 {
+      color: #6b4f45;
+    }
+
+    p {
+      font-size: 18px;
     }
 
     input {
@@ -34,7 +50,7 @@
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 16px;
-      box-sizing: border-box;
+      background: white;
     }
 
     button {
@@ -50,6 +66,10 @@
       cursor: pointer;
     }
 
+    button:active {
+      transform: scale(0.98);
+    }
+
     #loginPage {
       display: block;
     }
@@ -59,10 +79,12 @@
     }
 
     #reader {
+      width: 100%;
       background: white;
       border-radius: 15px;
       padding: 10px;
       margin-top: 20px;
+      overflow: hidden;
     }
 
     #hasil {
@@ -71,11 +93,13 @@
       background: white;
       border-radius: 12px;
       font-size: 18px;
+      min-height: 60px;
     }
 
     .error {
-      color: red;
+      color: #d00000;
       margin-top: 15px;
+      font-weight: bold;
     }
 
     .success {
@@ -85,22 +109,31 @@
 
     .user {
       background: white;
-      padding: 10px;
+      padding: 12px;
       border-radius: 10px;
       margin-top: 15px;
+      font-size: 17px;
     }
 
     .logout {
       background: #888;
       font-size: 14px;
       padding: 10px;
+      margin-top: 20px;
+    }
+
+    .loading {
+      color: #8a6a60;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<!-- =====================================================
+     HALAMAN LOGIN
+===================================================== -->
 
 <div id="loginPage" class="container">
 
@@ -122,14 +155,18 @@
     autocomplete="current-password"
   >
 
-  <button onclick="login()">MASUK</button>
+  <button onclick="login()">
+    MASUK
+  </button>
 
   <div id="loginError" class="error"></div>
 
 </div>
 
 
-<!-- ================= SCANNER ================= -->
+<!-- =====================================================
+     HALAMAN SCANNER
+===================================================== -->
 
 <div id="scanPage" class="container">
 
@@ -138,13 +175,14 @@
   <p>SCAN QR CODE</p>
 
   <div class="user">
-    Petugas: <b id="namaPetugas"></b>
+    👤 Petugas:
+    <b id="namaPetugas"></b>
   </div>
 
   <div id="reader"></div>
 
   <div id="hasil">
-    Menyiapkan kamera...
+    📷 Menyiapkan kamera...
   </div>
 
   <button class="logout" onclick="logout()">
@@ -156,15 +194,27 @@
 
 <script>
 
+/* =====================================================
+   URL GOOGLE APPS SCRIPT
+===================================================== */
+
 const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbwG9WUnSVBaa1bccVvjchz0teJ7edTLhxrYqm1iACQ4FuMYpSmlWOZR9Lv0SmqiMQM/exec";
 
+
+/* =====================================================
+   VARIABEL
+===================================================== */
+
 let sudahScan = false;
 let namaUser = "";
+let usernameAktif = "";
 let html5QrCode = null;
 
 
-// ================= LOGIN =================
+/* =====================================================
+   LOGIN
+===================================================== */
 
 function login() {
 
@@ -174,85 +224,167 @@ function login() {
   const password =
     document.getElementById("password").value.trim();
 
+  const errorBox =
+    document.getElementById("loginError");
+
+
+  /* CEK ISIAN */
+
   if (!username || !password) {
 
-    document.getElementById("loginError").innerHTML =
+    errorBox.innerHTML =
       "❌ Username dan password wajib diisi";
 
     return;
   }
 
-  document.getElementById("loginError").innerHTML =
-    "⏳ Memeriksa login...";
 
-  fetch(
+  /* STATUS */
+
+  errorBox.innerHTML =
+    "<span class='loading'>⏳ Memeriksa login...</span>";
+
+
+  /* URL LOGIN */
+
+  const url =
     WEB_APP_URL +
-    "?action=login&username=" +
+    "?action=login" +
+    "&username=" +
     encodeURIComponent(username) +
     "&password=" +
-    encodeURIComponent(password)
-  )
-  .then(function(response) {
-    return response.json();
+    encodeURIComponent(password) +
+    "&t=" +
+    new Date().getTime();
+
+
+  /* REQUEST KE APPS SCRIPT */
+
+  fetch(url, {
+    method: "GET",
+    redirect: "follow"
   })
+
+  .then(function(response) {
+
+    if (!response.ok) {
+      throw new Error(
+        "Server error: " + response.status
+      );
+    }
+
+    return response.json();
+
+  })
+
   .then(function(result) {
 
-    if (result.berhasil) {
+    console.log("HASIL LOGIN:", result);
+
+
+    /* LOGIN BERHASIL */
+
+    if (result.berhasil === true) {
 
       namaUser = result.nama;
+
+      usernameAktif = result.username;
+
 
       sessionStorage.setItem(
         "jejakkuUser",
         namaUser
       );
 
+      sessionStorage.setItem(
+        "jejakkuUsername",
+        usernameAktif
+      );
+
+
       tampilScanner();
 
-    } else {
+    }
 
-      document.getElementById("loginError").innerHTML =
+    /* LOGIN GAGAL */
+
+    else {
+
+      errorBox.innerHTML =
         "❌ Username atau password salah";
 
     }
 
   })
+
   .catch(function(error) {
 
-    console.error(error);
+    console.error("ERROR LOGIN:", error);
 
-    document.getElementById("loginError").innerHTML =
+    errorBox.innerHTML =
       "❌ Tidak dapat terhubung ke server";
 
   });
 }
 
 
-// ================= TAMPIL SCANNER =================
+/* =====================================================
+   TAMPILKAN SCANNER
+===================================================== */
 
 function tampilScanner() {
 
-  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("loginPage")
+    .style.display = "none";
 
-  document.getElementById("scanPage").style.display = "block";
+  document.getElementById("scanPage")
+    .style.display = "block";
 
-  document.getElementById("namaPetugas").innerText =
-    namaUser;
+  document.getElementById("namaPetugas")
+    .innerText = namaUser;
 
-  document.getElementById("hasil").innerHTML =
-    "📷 Meminta izin kamera...";
 
-  // Tunggu halaman scanner tampil
+  document.getElementById("hasil")
+    .innerHTML =
+      "📷 Meminta izin kamera...";
+
+
+  /*
+     Tunggu halaman tampil terlebih dahulu
+  */
+
   setTimeout(function() {
+
     mulaiScanner();
-  }, 300);
+
+  }, 500);
 }
 
 
-// ================= SCANNER KAMERA LANGSUNG =================
+/* =====================================================
+   MULAI KAMERA
+===================================================== */
 
 function mulaiScanner() {
 
-  html5QrCode = new Html5Qrcode("reader");
+  sudahScan = false;
+
+
+  /*
+     Bersihkan reader jika sebelumnya pernah digunakan
+  */
+
+  document.getElementById("reader")
+    .innerHTML = "";
+
+
+  html5QrCode =
+    new Html5Qrcode("reader");
+
+
+  /*
+     KAMERA BELAKANG
+  */
 
   html5QrCode.start(
 
@@ -274,59 +406,119 @@ function mulaiScanner() {
     berhasilScan,
 
     function(errorMessage) {
-      // Error pembacaan QR diabaikan
+
+      /*
+         Error pembacaan QR
+         tidak ditampilkan agar layar bersih
+      */
+
     }
 
-  ).then(function() {
+  )
 
-    document.getElementById("hasil").innerHTML =
-      "📷 Kamera aktif<br><br>" +
-      "Arahkan kamera ke QR Code";
+  .then(function() {
 
-  }).catch(function(error) {
+    document.getElementById("hasil")
+      .innerHTML =
+        "📷 <b>KAMERA AKTIF</b><br><br>" +
+        "Arahkan kamera ke QR Code";
 
-    console.error(error);
+  })
 
-    document.getElementById("hasil").innerHTML =
-      "❌ <b>KAMERA TIDAK DIIJINKAN</b><br><br>" +
-      "Pastikan izin kamera browser sudah diizinkan.";
+  .catch(function(error) {
+
+    console.error(
+      "KAMERA ERROR:",
+      error
+    );
+
+    document.getElementById("hasil")
+      .innerHTML =
+        "❌ <b>KAMERA TIDAK DAPAT DIAKSES</b>" +
+        "<br><br>" +
+        "Pastikan izin kamera browser sudah diizinkan.";
 
   });
 }
 
 
-// ================= HASIL SCAN =================
+/* =====================================================
+   QR BERHASIL TERBACA
+===================================================== */
 
 function berhasilScan(kodeQR) {
 
-  if (sudahScan) return;
+  /*
+     Mencegah QR yang sama tersimpan berkali-kali
+  */
+
+  if (sudahScan) {
+    return;
+  }
 
   sudahScan = true;
 
-  // Hentikan kamera
+
+  /*
+     Hentikan kamera
+  */
+
   if (html5QrCode) {
 
-    html5QrCode.stop().then(function() {
+    html5QrCode.stop()
 
-      console.log("Kamera dihentikan");
+      .then(function() {
 
-    }).catch(function(error) {
+        console.log(
+          "Kamera dihentikan"
+        );
 
-      console.log(error);
+      })
 
-    });
+      .catch(function(error) {
 
+        console.log(
+          "Stop camera:",
+          error
+        );
+
+      });
   }
 
-  document.getElementById("hasil").innerHTML =
-    "✅ <b>QR TERBACA</b><br><br>" +
-    "<b>" + kodeQR + "</b>" +
-    "<br><br>⏳ Menyimpan...";
+
+  /*
+     Tampilkan hasil QR
+  */
+
+  document.getElementById("hasil")
+    .innerHTML =
+      "✅ <b>QR TERBACA</b>" +
+      "<br><br>" +
+      "<b>" +
+      kodeQR +
+      "</b>" +
+      "<br><br>" +
+      "⏳ Menyimpan data...";
+
+
+  /*
+     DATA YANG DIKIRIM
+  */
 
   const data = {
+
     kodeQR: kodeQR,
-    namaUser: namaUser
+
+    namaUser: namaUser,
+
+    username: usernameAktif
+
   };
+
+
+  /*
+     KIRIM KE GOOGLE APPS SCRIPT
+  */
 
   fetch(WEB_APP_URL, {
 
@@ -335,24 +527,45 @@ function berhasilScan(kodeQR) {
     mode: "no-cors",
 
     headers: {
-      "Content-Type": "text/plain"
+
+      "Content-Type":
+        "text/plain"
+
     },
 
-    body: JSON.stringify(data)
+    body:
+      JSON.stringify(data)
 
   })
+
   .then(function() {
 
-    document.getElementById("hasil").innerHTML =
-      "<span class='success'>✅ BERHASIL</span>" +
-      "<br><br>" +
-      "Kode: <b>" + kodeQR + "</b>" +
-      "<br>" +
-      "Petugas: <b>" + namaUser + "</b>" +
-      "<br><br>" +
-      "Data sudah masuk Google Sheet.";
+    /*
+       BERHASIL
+    */
 
-    // Kembali ke awal setelah 1,5 detik
+    document.getElementById("hasil")
+      .innerHTML =
+        "<span class='success'>" +
+        "✅ BERHASIL" +
+        "</span>" +
+        "<br><br>" +
+        "Kode: <b>" +
+        kodeQR +
+        "</b>" +
+        "<br>" +
+        "Petugas: <b>" +
+        namaUser +
+        "</b>" +
+        "<br><br>" +
+        "Data sudah masuk Google Sheet.";
+
+
+    /*
+       KEMBALI KE HALAMAN AWAL
+       setelah 1,5 detik
+    */
+
     setTimeout(function() {
 
       location.reload();
@@ -360,10 +573,19 @@ function berhasilScan(kodeQR) {
     }, 1500);
 
   })
+
   .catch(function(error) {
 
-    document.getElementById("hasil").innerHTML =
-      "❌ Gagal mengirim data";
+    console.error(
+      "GAGAL KIRIM:",
+      error
+    );
+
+    document.getElementById("hasil")
+      .innerHTML =
+        "❌ <b>Gagal menyimpan data</b>" +
+        "<br><br>" +
+        "Silakan coba scan kembali.";
 
     sudahScan = false;
 
@@ -371,23 +593,47 @@ function berhasilScan(kodeQR) {
 }
 
 
-// ================= LOGOUT =================
+/* =====================================================
+   LOGOUT
+===================================================== */
 
 function logout() {
 
+  /*
+     Matikan kamera
+  */
+
   if (html5QrCode) {
 
-    html5QrCode.stop().catch(function() {});
+    html5QrCode
+      .stop()
+      .catch(function() {});
 
   }
 
-  sessionStorage.removeItem("jejakkuUser");
+
+  /*
+     Hapus session
+  */
+
+  sessionStorage.removeItem(
+    "jejakkuUser"
+  );
+
+  sessionStorage.removeItem(
+    "jejakkuUsername"
+  );
+
+
+  /*
+     Kembali ke login
+  */
 
   location.reload();
-
 }
 
 </script>
 
 </body>
 </html>
+```
