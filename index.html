@@ -34,10 +34,6 @@
       font-size: 34px;
     }
 
-    h2 {
-      color: #6b4f45;
-    }
-
     p {
       font-size: 18px;
     }
@@ -66,10 +62,6 @@
       cursor: pointer;
     }
 
-    button:active {
-      transform: scale(0.98);
-    }
-
     #loginPage {
       display: block;
     }
@@ -93,7 +85,7 @@
       background: white;
       border-radius: 12px;
       font-size: 18px;
-      min-height: 60px;
+      min-height: 70px;
     }
 
     .error {
@@ -115,13 +107,6 @@
       font-size: 17px;
     }
 
-    .logout {
-      background: #888;
-      font-size: 14px;
-      padding: 10px;
-      margin-top: 20px;
-    }
-
     .loading {
       color: #8a6a60;
       font-weight: bold;
@@ -132,7 +117,7 @@
 <body>
 
 <!-- =====================================================
-     HALAMAN LOGIN
+     LOGIN
 ===================================================== -->
 
 <div id="loginPage" class="container">
@@ -165,7 +150,7 @@
 
 
 <!-- =====================================================
-     HALAMAN SCANNER
+     SCANNER
 ===================================================== -->
 
 <div id="scanPage" class="container">
@@ -185,17 +170,13 @@
     📷 Menyiapkan kamera...
   </div>
 
-  <button class="logout" onclick="logout()">
-    KELUAR
-  </button>
-
 </div>
 
 
 <script>
 
 /* =====================================================
-   URL GOOGLE APPS SCRIPT
+   GOOGLE APPS SCRIPT
 ===================================================== */
 
 const WEB_APP_URL =
@@ -228,8 +209,6 @@ function login() {
     document.getElementById("loginError");
 
 
-  /* CEK ISIAN */
-
   if (!username || !password) {
 
     errorBox.innerHTML =
@@ -239,13 +218,9 @@ function login() {
   }
 
 
-  /* STATUS */
-
   errorBox.innerHTML =
     "<span class='loading'>⏳ Memeriksa login...</span>";
 
-
-  /* URL LOGIN */
 
   const url =
     WEB_APP_URL +
@@ -257,8 +232,6 @@ function login() {
     "&t=" +
     new Date().getTime();
 
-
-  /* REQUEST KE APPS SCRIPT */
 
   fetch(url, {
     method: "GET",
@@ -282,8 +255,6 @@ function login() {
     console.log("HASIL LOGIN:", result);
 
 
-    /* LOGIN BERHASIL */
-
     if (result.berhasil === true) {
 
       namaUser = result.nama;
@@ -304,11 +275,7 @@ function login() {
 
       tampilScanner();
 
-    }
-
-    /* LOGIN GAGAL */
-
-    else {
+    } else {
 
       errorBox.innerHTML =
         "❌ Username atau password salah";
@@ -343,15 +310,10 @@ function tampilScanner() {
   document.getElementById("namaPetugas")
     .innerText = namaUser;
 
-
   document.getElementById("hasil")
     .innerHTML =
       "📷 Meminta izin kamera...";
 
-
-  /*
-     Tunggu halaman tampil terlebih dahulu
-  */
 
   setTimeout(function() {
 
@@ -369,22 +331,12 @@ function mulaiScanner() {
 
   sudahScan = false;
 
-
-  /*
-     Bersihkan reader jika sebelumnya pernah digunakan
-  */
-
   document.getElementById("reader")
     .innerHTML = "";
-
 
   html5QrCode =
     new Html5Qrcode("reader");
 
-
-  /*
-     KAMERA BELAKANG
-  */
 
   html5QrCode.start(
 
@@ -406,12 +358,7 @@ function mulaiScanner() {
     berhasilScan,
 
     function(errorMessage) {
-
-      /*
-         Error pembacaan QR
-         tidak ditampilkan agar layar bersih
-      */
-
+      // Error pembacaan QR diabaikan
     }
 
   )
@@ -448,10 +395,6 @@ function mulaiScanner() {
 
 function berhasilScan(kodeQR) {
 
-  /*
-     Mencegah QR yang sama tersimpan berkali-kali
-  */
-
   if (sudahScan) {
     return;
   }
@@ -459,9 +402,7 @@ function berhasilScan(kodeQR) {
   sudahScan = true;
 
 
-  /*
-     Hentikan kamera
-  */
+  /* HENTIKAN KAMERA */
 
   if (html5QrCode) {
 
@@ -486,9 +427,7 @@ function berhasilScan(kodeQR) {
   }
 
 
-  /*
-     Tampilkan hasil QR
-  */
+  /* TAMPILKAN QR */
 
   document.getElementById("hasil")
     .innerHTML =
@@ -501,9 +440,7 @@ function berhasilScan(kodeQR) {
       "⏳ Menyimpan data...";
 
 
-  /*
-     DATA YANG DIKIRIM
-  */
+  /* DATA */
 
   const data = {
 
@@ -516,9 +453,7 @@ function berhasilScan(kodeQR) {
   };
 
 
-  /*
-     KIRIM KE GOOGLE APPS SCRIPT
-  */
+  /* KIRIM KE APPS SCRIPT */
 
   fetch(WEB_APP_URL, {
 
@@ -527,10 +462,7 @@ function berhasilScan(kodeQR) {
     mode: "no-cors",
 
     headers: {
-
-      "Content-Type":
-        "text/plain"
-
+      "Content-Type": "text/plain"
     },
 
     body:
@@ -540,9 +472,7 @@ function berhasilScan(kodeQR) {
 
   .then(function() {
 
-    /*
-       BERHASIL
-    */
+    /* BERHASIL */
 
     document.getElementById("hasil")
       .innerHTML =
@@ -562,13 +492,25 @@ function berhasilScan(kodeQR) {
 
 
     /*
-       KEMBALI KE HALAMAN AWAL
-       setelah 1,5 detik
+       TIDAK KEMBALI KE LOGIN
+
+       Setelah 1,5 detik kamera
+       langsung aktif kembali.
     */
 
     setTimeout(function() {
 
-      location.reload();
+      document.getElementById("hasil")
+        .innerHTML =
+          "📷 <b>SIAP SCAN</b><br><br>" +
+          "Arahkan kamera ke QR Code berikutnya";
+
+      document.getElementById("reader")
+        .innerHTML = "";
+
+      sudahScan = false;
+
+      mulaiScanner();
 
     }, 1500);
 
@@ -589,47 +531,13 @@ function berhasilScan(kodeQR) {
 
     sudahScan = false;
 
+    setTimeout(function() {
+
+      mulaiScanner();
+
+    }, 1500);
+
   });
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-function logout() {
-
-  /*
-     Matikan kamera
-  */
-
-  if (html5QrCode) {
-
-    html5QrCode
-      .stop()
-      .catch(function() {});
-
-  }
-
-
-  /*
-     Hapus session
-  */
-
-  sessionStorage.removeItem(
-    "jejakkuUser"
-  );
-
-  sessionStorage.removeItem(
-    "jejakkuUsername"
-  );
-
-
-  /*
-     Kembali ke login
-  */
-
-  location.reload();
 }
 
 </script>
