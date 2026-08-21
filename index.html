@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>JEJAKKU</title>
 
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -16,21 +18,25 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f7eee9;
-      text-align: center;
       color: #4f403a;
+      text-align: center;
     }
 
     .container {
       width: 100%;
       max-width: 500px;
       margin: auto;
-      padding: 30px 15px;
+      padding: 25px 15px;
     }
 
     h1 {
       color: #6b4f45;
-      margin-bottom: 5px;
       font-size: 34px;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      color: #6b4f45;
     }
 
     p {
@@ -40,113 +46,265 @@
     input,
     select,
     textarea {
+
       width: 90%;
       max-width: 350px;
+
       padding: 14px;
+
       margin: 8px 0;
+
       border: 1px solid #ddd;
+
       border-radius: 10px;
+
       font-size: 16px;
+
       background: white;
+
       font-family: Arial, sans-serif;
+
     }
 
     textarea {
+
       min-height: 100px;
+
       resize: vertical;
+
     }
 
     button {
+
       width: 90%;
       max-width: 350px;
+
       padding: 14px;
+
       margin-top: 10px;
+
       border: none;
+
       border-radius: 10px;
+
       background: #d88c9a;
+
       color: white;
+
       font-size: 17px;
+
       cursor: pointer;
+
+    }
+
+    button:active {
+
+      transform: scale(0.98);
+
     }
 
     #loginPage {
+
       display: block;
+
     }
 
     #scanPage {
+
       display: none;
+
     }
 
-    #formHasil {
+    #dashboardPage {
+
       display: none;
-      margin-top: 20px;
-      padding: 18px;
-      background: white;
-      border-radius: 12px;
+
     }
 
     #reader {
+
       width: 100%;
+
       background: white;
+
       border-radius: 15px;
+
       padding: 10px;
+
       margin-top: 20px;
+
       overflow: hidden;
+
     }
 
     #hasil {
+
       margin-top: 20px;
+
       padding: 18px;
+
       background: white;
+
       border-radius: 12px;
+
       font-size: 18px;
+
       min-height: 70px;
+
     }
 
-    .error {
-      color: #d00000;
-      margin-top: 15px;
-      font-weight: bold;
-    }
+    #formHasil {
 
-    .success {
-      color: green;
-      font-weight: bold;
+      display: none;
+
+      margin-top: 20px;
+
+      padding: 18px;
+
+      background: white;
+
+      border-radius: 12px;
+
     }
 
     .user {
+
       background: white;
+
       padding: 12px;
+
       border-radius: 10px;
+
       margin-top: 15px;
+
       font-size: 17px;
+
+    }
+
+    .error {
+
+      color: #d00000;
+
+      margin-top: 15px;
+
+      font-weight: bold;
+
+    }
+
+    .success {
+
+      color: green;
+
+      font-weight: bold;
+
     }
 
     .loading {
+
       color: #8a6a60;
+
       font-weight: bold;
+
     }
 
     .label {
+
       display: block;
-      text-align: left;
+
       width: 90%;
+
       max-width: 350px;
+
       margin: 12px auto 2px;
+
+      text-align: left;
+
       font-weight: bold;
+
     }
 
     .qr-result {
-      background: #f7eee9;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 10px auto 15px;
+
       width: 90%;
+
       max-width: 350px;
+
+      margin: 10px auto;
+
+      padding: 12px;
+
+      background: #f7eee9;
+
+      border-radius: 10px;
+
       word-break: break-word;
+
     }
+
+    .dashboard-grid {
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+
+      margin-top: 20px;
+
+    }
+
+    .card {
+
+      background: white;
+
+      padding: 18px 10px;
+
+      border-radius: 12px;
+
+    }
+
+    .card-icon {
+
+      font-size: 28px;
+
+    }
+
+    .card-number {
+
+      font-size: 28px;
+
+      font-weight: bold;
+
+      margin-top: 5px;
+
+    }
+
+    .full-card {
+
+      grid-column: 1 / 3;
+
+    }
+
+    .riwayat {
+
+      background: white;
+
+      padding: 15px;
+
+      margin-top: 10px;
+
+      border-radius: 12px;
+
+      text-align: left;
+
+      word-break: break-word;
+
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
@@ -195,72 +353,102 @@
   <p>SCAN QR CODE</p>
 
   <div class="user">
+
     👤 Petugas:
+
     <b id="namaPetugas"></b>
+
   </div>
 
 
-  <!-- KAMERA -->
+  <button onclick="tampilDashboard()">
+
+    📊 DASHBOARD
+
+  </button>
+
 
   <div id="reader"></div>
 
 
-  <!-- INFORMASI KAMERA -->
-
   <div id="hasil">
+
     📷 Menyiapkan kamera...
+
   </div>
 
 
   <!-- =================================================
-       FORM SETELAH SCAN
+       FORM STATUS DAN KETERANGAN
   ================================================== -->
 
   <div id="formHasil">
 
     <h2>DATA HASIL SCAN</h2>
 
+
     <div class="label">
+
       Hasil QR Code
+
     </div>
+
 
     <div class="qr-result">
+
       <b id="kodeQR"></b>
+
     </div>
 
 
     <div class="label">
+
       Status
+
     </div>
+
 
     <select id="status">
 
       <option value="">
+
         -- Pilih Status --
+
       </option>
 
       <option value="Diterima">
+
         Diterima
+
       </option>
 
       <option value="Diproses">
+
         Diproses
+
       </option>
 
       <option value="Selesai">
+
         Selesai
+
       </option>
 
       <option value="Dikembalikan">
+
         Dikembalikan
+
       </option>
 
     </select>
 
 
     <div class="label">
+
       Keterangan
+
     </div>
+
 
     <textarea
       id="keterangan"
@@ -269,8 +457,11 @@
 
 
     <button onclick="simpanData()">
+
       💾 SIMPAN DATA
+
     </button>
+
 
     <div
       id="formError"
@@ -278,6 +469,42 @@
     ></div>
 
   </div>
+
+</div>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<div id="dashboardPage" class="container">
+
+  <h1>JEJAKKU</h1>
+
+  <p>📊 DASHBOARD</p>
+
+
+  <div class="user">
+
+    👤 Petugas:
+
+    <b id="namaPetugasDashboard"></b>
+
+  </div>
+
+
+  <div id="dashboardHasil">
+
+    ⏳ Memuat data...
+
+  </div>
+
+
+  <button onclick="kembaliScanner()">
+
+    📷 KEMBALI SCAN
+
+  </button>
 
 </div>
 
@@ -322,11 +549,13 @@ function login() {
       .value
       .trim();
 
+
   const password =
     document
       .getElementById("password")
       .value
       .trim();
+
 
   const errorBox =
     document.getElementById("loginError");
@@ -338,20 +567,28 @@ function login() {
       "❌ Username dan password wajib diisi";
 
     return;
+
   }
 
 
   errorBox.innerHTML =
-    "<span class='loading'>⏳ Memeriksa login...</span>";
+    "<span class='loading'>" +
+    "⏳ Memeriksa login..." +
+    "</span>";
 
 
   const url =
+
     WEB_APP_URL +
+
     "?action=login" +
+
     "&username=" +
     encodeURIComponent(username) +
+
     "&password=" +
     encodeURIComponent(password) +
+
     "&t=" +
     new Date().getTime();
 
@@ -389,7 +626,9 @@ function login() {
 
     if (result.berhasil === true) {
 
-      namaUser = result.nama;
+      namaUser =
+        result.nama;
+
 
       usernameAktif =
         result.username;
@@ -427,15 +666,17 @@ function login() {
       error
     );
 
+
     errorBox.innerHTML =
       "❌ Tidak dapat terhubung ke server";
 
   });
+
 }
 
 
 /* =====================================================
-   TAMPILKAN SCANNER
+   TAMPIL SCANNER
 ===================================================== */
 
 function tampilScanner() {
@@ -446,13 +687,19 @@ function tampilScanner() {
 
 
   document
+    .getElementById("dashboardPage")
+    .style.display = "none";
+
+
+  document
     .getElementById("scanPage")
     .style.display = "block";
 
 
   document
     .getElementById("namaPetugas")
-    .innerText = namaUser;
+    .innerText =
+      namaUser;
 
 
   document
@@ -471,11 +718,12 @@ function tampilScanner() {
     mulaiScanner();
 
   }, 500);
+
 }
 
 
 /* =====================================================
-   MULAI KAMERA
+   MULAI SCANNER
 ===================================================== */
 
 function mulaiScanner() {
@@ -506,21 +754,26 @@ function mulaiScanner() {
     },
 
     {
+
       fps: 10,
 
       qrbox: {
+
         width: 250,
+
         height: 250
+
       },
 
       aspectRatio: 1.0
+
     },
 
     berhasilScan,
 
     function(errorMessage) {
 
-      // Error pembacaan QR diabaikan
+      // Error scan diabaikan
 
     }
 
@@ -531,8 +784,11 @@ function mulaiScanner() {
     document
       .getElementById("hasil")
       .innerHTML =
+
         "📷 <b>KAMERA AKTIF</b>" +
+
         "<br><br>" +
+
         "Arahkan kamera ke QR Code";
 
   })
@@ -544,25 +800,32 @@ function mulaiScanner() {
       error
     );
 
+
     document
       .getElementById("hasil")
       .innerHTML =
+
         "❌ <b>KAMERA TIDAK DAPAT DIAKSES</b>" +
+
         "<br><br>" +
+
         "Pastikan izin kamera browser sudah diizinkan.";
 
   });
+
 }
 
 
 /* =====================================================
-   QR BERHASIL TERBACA
+   QR TERBACA
 ===================================================== */
 
 function berhasilScan(kodeQR) {
 
   if (sudahScan) {
+
     return;
+
   }
 
 
@@ -571,36 +834,25 @@ function berhasilScan(kodeQR) {
   kodeQRhasil = kodeQR;
 
 
-  /* HENTIKAN KAMERA */
-
   if (html5QrCode) {
 
     html5QrCode
+
       .stop()
-      .then(function() {
 
-        console.log(
-          "Kamera dihentikan"
-        );
-
-      })
       .catch(function(error) {
 
-        console.log(
-          "Stop camera:",
-          error
-        );
+        console.log(error);
 
       });
 
   }
 
 
-  /* TAMPILKAN HASIL */
-
   document
     .getElementById("hasil")
     .innerHTML =
+
       "✅ <b>QR TERBACA</b>";
 
 
@@ -627,18 +879,18 @@ function berhasilScan(kodeQR) {
 
   document
     .getElementById("formHasil")
-    .style.display = "block";
+    .style.display =
+      "block";
 
-
-  /*
-     Scroll ke form
-  */
 
   document
     .getElementById("formHasil")
     .scrollIntoView({
+
       behavior: "smooth"
+
     });
+
 }
 
 
@@ -649,17 +901,21 @@ function berhasilScan(kodeQR) {
 function simpanData() {
 
   if (sudahSimpan) {
+
     return;
+
   }
 
 
   const status =
+
     document
       .getElementById("status")
       .value;
 
 
   const keterangan =
+
     document
       .getElementById("keterangan")
       .value
@@ -667,11 +923,10 @@ function simpanData() {
 
 
   const formError =
+
     document
       .getElementById("formError");
 
-
-  /* CEK STATUS */
 
   if (!status) {
 
@@ -679,10 +934,9 @@ function simpanData() {
       "❌ Silakan pilih status";
 
     return;
+
   }
 
-
-  /* CEK KETERANGAN */
 
   if (!keterangan) {
 
@@ -690,6 +944,7 @@ function simpanData() {
       "❌ Silakan isi keterangan";
 
     return;
+
   }
 
 
@@ -697,8 +952,11 @@ function simpanData() {
 
 
   formError.innerHTML =
+
     "<span class='loading'>" +
+
     "⏳ Menyimpan data..." +
+
     "</span>";
 
 
@@ -722,8 +980,6 @@ function simpanData() {
   };
 
 
-  /* KIRIM KE APPS SCRIPT */
-
   fetch(WEB_APP_URL, {
 
     method: "POST",
@@ -745,41 +1001,49 @@ function simpanData() {
   .then(function() {
 
 
-    /* BERHASIL */
-
     document
       .getElementById("formHasil")
-      .style.display = "none";
+      .style.display =
+        "none";
 
 
     document
       .getElementById("hasil")
       .innerHTML =
+
         "<span class='success'>" +
+
         "✅ DATA BERHASIL DISIMPAN" +
+
         "</span>" +
+
         "<br><br>" +
+
         "Petugas: <b>" +
+
         namaUser +
+
         "</b>" +
+
         "<br>" +
+
         "Status: <b>" +
+
         status +
+
         "</b>";
 
-
-    /*
-       Setelah 1,5 detik,
-       kamera aktif lagi.
-    */
 
     setTimeout(function() {
 
       document
         .getElementById("hasil")
         .innerHTML =
+
           "📷 <b>SIAP SCAN</b>" +
+
           "<br><br>" +
+
           "Arahkan kamera ke QR Code berikutnya";
 
 
@@ -811,10 +1075,311 @@ function simpanData() {
 
 
     formError.innerHTML =
+
       "❌ Gagal menyimpan data." +
-      "<br>Silakan coba lagi.";
+
+      "<br>" +
+
+      "Silakan coba lagi.";
 
   });
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function tampilDashboard() {
+
+
+  /* MATIKAN KAMERA */
+
+  if (html5QrCode) {
+
+    html5QrCode
+      .stop()
+      .catch(function() {});
+
+  }
+
+
+  document
+    .getElementById("scanPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("dashboardPage")
+    .style.display = "block";
+
+
+  document
+    .getElementById("namaPetugasDashboard")
+    .innerText =
+      namaUser;
+
+
+  document
+    .getElementById("dashboardHasil")
+    .innerHTML =
+      "⏳ Memuat data dashboard...";
+
+
+  const url =
+
+    WEB_APP_URL +
+
+    "?action=dashboard" +
+
+    "&t=" +
+
+    new Date().getTime();
+
+
+  fetch(url)
+
+    .then(function(response) {
+
+      return response.json();
+
+    })
+
+    .then(function(data) {
+
+      tampilDataDashboard(data);
+
+    })
+
+    .catch(function(error) {
+
+      console.error(error);
+
+      document
+        .getElementById("dashboardHasil")
+        .innerHTML =
+          "❌ Gagal mengambil data dashboard";
+
+    });
+
+}
+
+
+/* =====================================================
+   TAMPIL DASHBOARD
+===================================================== */
+
+function tampilDataDashboard(data) {
+
+  let html = "";
+
+
+  html += `
+
+    <div class="dashboard-grid">
+
+      <div class="card">
+
+        <div class="card-icon">
+          📋
+        </div>
+
+        <b>
+          Total Scan
+        </b>
+
+        <div class="card-number">
+          ${data.total}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-icon">
+          📥
+        </div>
+
+        <b>
+          Diterima
+        </b>
+
+        <div class="card-number">
+          ${data.diterima}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-icon">
+          🔄
+        </div>
+
+        <b>
+          Diproses
+        </b>
+
+        <div class="card-number">
+          ${data.diproses}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-icon">
+          ✅
+        </div>
+
+        <b>
+          Selesai
+        </b>
+
+        <div class="card-number">
+          ${data.selesai}
+        </div>
+
+      </div>
+
+
+      <div class="card full-card">
+
+        <div class="card-icon">
+          ↩️
+        </div>
+
+        <b>
+          Dikembalikan
+        </b>
+
+        <div class="card-number">
+          ${data.dikembalikan}
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  html += `
+
+    <h2>
+      📋 RIWAYAT TERBARU
+    </h2>
+
+  `;
+
+
+  if (
+    !data.riwayat ||
+    data.riwayat.length === 0
+  ) {
+
+    html += `
+
+      <div class="riwayat">
+
+        Belum ada data scan.
+
+      </div>
+
+    `;
+
+  }
+
+  else {
+
+    data.riwayat.forEach(function(item) {
+
+      html += `
+
+        <div class="riwayat">
+
+          <b>
+            ${item.kodeQR}
+          </b>
+
+          <br><br>
+
+          🕐 ${item.waktu}
+
+          <br>
+
+          👤 ${item.petugas}
+
+          <br>
+
+          📌 <b>
+            ${item.status}
+          </b>
+
+          <br>
+
+          📝 ${item.keterangan}
+
+        </div>
+
+      `;
+
+    });
+
+  }
+
+
+  document
+    .getElementById("dashboardHasil")
+    .innerHTML =
+      html;
+
+}
+
+
+/* =====================================================
+   KEMBALI KE SCANNER
+===================================================== */
+
+function kembaliScanner() {
+
+  document
+    .getElementById("dashboardPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("scanPage")
+    .style.display = "block";
+
+
+  document
+    .getElementById("hasil")
+    .innerHTML =
+
+      "📷 <b>SIAP SCAN</b>" +
+
+      "<br><br>" +
+
+      "Arahkan kamera ke QR Code";
+
+
+  document
+    .getElementById("reader")
+    .innerHTML = "";
+
+
+  sudahScan = false;
+
+  sudahSimpan = false;
+
+
+  mulaiScanner();
+
 }
 
 </script>
