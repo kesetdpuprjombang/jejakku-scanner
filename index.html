@@ -144,7 +144,7 @@
   <div id="reader"></div>
 
   <div id="hasil">
-    Arahkan kamera ke QR Code
+    Menyiapkan kamera...
   </div>
 
   <button class="logout" onclick="logout()">
@@ -161,6 +161,7 @@ const WEB_APP_URL =
 
 let sudahScan = false;
 let namaUser = "";
+let html5QrCode = null;
 
 
 // ================= LOGIN =================
@@ -172,13 +173,6 @@ function login() {
 
   const password =
     document.getElementById("password").value.trim();
-
-  /*
-    LOGIN SEMENTARA
-
-    Username : admin
-    Password : 12345
-  */
 
   if (username === "admin" && password === "12345") {
 
@@ -207,28 +201,60 @@ function tampilScanner() {
   document.getElementById("namaPetugas").innerText =
     namaUser;
 
-  mulaiScanner();
+  document.getElementById("hasil").innerHTML =
+    "📷 Meminta izin kamera...";
+
+  // Tunggu halaman scanner tampil
+  setTimeout(function() {
+    mulaiScanner();
+  }, 300);
 }
 
 
-// ================= SCANNER =================
+// ================= SCANNER KAMERA LANGSUNG =================
 
 function mulaiScanner() {
 
-  const scanner = new Html5QrcodeScanner(
-    "reader",
+  html5QrCode = new Html5Qrcode("reader");
+
+  html5QrCode.start(
+
+    {
+      facingMode: "environment"
+    },
+
     {
       fps: 10,
+
       qrbox: {
         width: 250,
         height: 250
       },
-      rememberLastUsedCamera: true
-    },
-    false
-  );
 
-  scanner.render(berhasilScan, gagalScan);
+      aspectRatio: 1.0
+    },
+
+    berhasilScan,
+
+    function(errorMessage) {
+      // Error pembacaan QR diabaikan
+    }
+
+  ).then(function() {
+
+    document.getElementById("hasil").innerHTML =
+      "📷 Kamera aktif<br><br>" +
+      "Arahkan kamera ke QR Code";
+
+  }).catch(function(error) {
+
+    console.error(error);
+
+    document.getElementById("hasil").innerHTML =
+      "❌ <b>KAMERA TIDAK DIIJINKAN</b><br><br>" +
+      "Pastikan izin kamera browser sudah diizinkan.";
+
+  });
 }
 
 
@@ -240,10 +266,25 @@ function berhasilScan(kodeQR) {
 
   sudahScan = true;
 
+  // Hentikan kamera
+  if (html5QrCode) {
+
+    html5QrCode.stop().then(function() {
+
+      console.log("Kamera dihentikan");
+
+    }).catch(function(error) {
+
+      console.log(error);
+
+    });
+
+  }
+
   document.getElementById("hasil").innerHTML =
-    "QR TERBACA<br><br>" +
+    "✅ <b>QR TERBACA</b><br><br>" +
     "<b>" + kodeQR + "</b>" +
-    "<br><br>Menyimpan...";
+    "<br><br>⏳ Menyimpan...";
 
   const data = {
     kodeQR: kodeQR,
@@ -267,9 +308,14 @@ function berhasilScan(kodeQR) {
 
     document.getElementById("hasil").innerHTML =
       "<span class='success'>✅ BERHASIL</span>" +
-      "<br><br>Kode: <b>" + kodeQR + "</b>" +
-      "<br>Petugas: <b>" + namaUser + "</b>";
+      "<br><br>" +
+      "Kode: <b>" + kodeQR + "</b>" +
+      "<br>" +
+      "Petugas: <b>" + namaUser + "</b>" +
+      "<br><br>" +
+      "Data sudah masuk Google Sheet.";
 
+    // Kembali ke awal setelah 1,5 detik
     setTimeout(function() {
 
       location.reload();
@@ -288,14 +334,15 @@ function berhasilScan(kodeQR) {
 }
 
 
-function gagalScan(error) {
-  // error scan diabaikan
-}
-
-
 // ================= LOGOUT =================
 
 function logout() {
+
+  if (html5QrCode) {
+
+    html5QrCode.stop().catch(function() {});
+
+  }
 
   sessionStorage.removeItem("jejakkuUser");
 
