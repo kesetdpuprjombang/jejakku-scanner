@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JEJAKKU - Scan QR</title>
+  <title>JEJAKKU</title>
 
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
@@ -18,7 +18,7 @@
     .container {
       max-width: 500px;
       margin: auto;
-      padding: 25px 15px;
+      padding: 30px 15px;
     }
 
     h1 {
@@ -26,15 +26,43 @@
       margin-bottom: 5px;
     }
 
-    .judul {
-      font-size: 20px;
-      margin-bottom: 20px;
+    input {
+      width: 90%;
+      max-width: 350px;
+      padding: 14px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 90%;
+      max-width: 350px;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #d88c9a;
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    #loginPage {
+      display: block;
+    }
+
+    #scanPage {
+      display: none;
     }
 
     #reader {
       background: white;
       border-radius: 15px;
       padding: 10px;
+      margin-top: 20px;
     }
 
     #hasil {
@@ -45,21 +73,72 @@
       font-size: 18px;
     }
 
+    .error {
+      color: red;
+      margin-top: 15px;
+    }
+
     .success {
       color: green;
       font-weight: bold;
+    }
+
+    .user {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    .logout {
+      background: #888;
+      font-size: 14px;
+      padding: 10px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage" class="container">
 
   <h1>JEJAKKU</h1>
 
-  <div class="judul">
-    SCAN QR CODE
+  <p>LOGIN PETUGAS</p>
+
+  <input
+    type="text"
+    id="username"
+    placeholder="Username"
+    autocomplete="username"
+  >
+
+  <input
+    type="password"
+    id="password"
+    placeholder="Password"
+    autocomplete="current-password"
+  >
+
+  <button onclick="login()">MASUK</button>
+
+  <div id="loginError" class="error"></div>
+
+</div>
+
+
+<!-- ================= SCANNER ================= -->
+
+<div id="scanPage" class="container">
+
+  <h1>JEJAKKU</h1>
+
+  <p>SCAN QR CODE</p>
+
+  <div class="user">
+    Petugas: <b id="namaPetugas"></b>
   </div>
 
   <div id="reader"></div>
@@ -68,7 +147,12 @@
     Arahkan kamera ke QR Code
   </div>
 
+  <button class="logout" onclick="logout()">
+    KELUAR
+  </button>
+
 </div>
+
 
 <script>
 
@@ -76,6 +160,79 @@ const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbwG9WUnSVBaa1bccVvjchz0teJ7edTLhxrYqm1iACQ4FuMYpSmlWOZR9Lv0SmqiMQM/exec";
 
 let sudahScan = false;
+let namaUser = "";
+
+
+// ================= LOGIN =================
+
+function login() {
+
+  const username =
+    document.getElementById("username").value.trim();
+
+  const password =
+    document.getElementById("password").value.trim();
+
+  /*
+    LOGIN SEMENTARA
+
+    Username : admin
+    Password : 12345
+  */
+
+  if (username === "admin" && password === "12345") {
+
+    namaUser = "Admin";
+
+    sessionStorage.setItem("jejakkuUser", namaUser);
+
+    tampilScanner();
+
+  } else {
+
+    document.getElementById("loginError").innerHTML =
+      "❌ Username atau password salah";
+  }
+}
+
+
+// ================= TAMPIL SCANNER =================
+
+function tampilScanner() {
+
+  document.getElementById("loginPage").style.display = "none";
+
+  document.getElementById("scanPage").style.display = "block";
+
+  document.getElementById("namaPetugas").innerText =
+    namaUser;
+
+  mulaiScanner();
+}
+
+
+// ================= SCANNER =================
+
+function mulaiScanner() {
+
+  const scanner = new Html5QrcodeScanner(
+    "reader",
+    {
+      fps: 10,
+      qrbox: {
+        width: 250,
+        height: 250
+      },
+      rememberLastUsedCamera: true
+    },
+    false
+  );
+
+  scanner.render(berhasilScan, gagalScan);
+}
+
+
+// ================= HASIL SCAN =================
 
 function berhasilScan(kodeQR) {
 
@@ -84,28 +241,40 @@ function berhasilScan(kodeQR) {
   sudahScan = true;
 
   document.getElementById("hasil").innerHTML =
-    "QR TERBACA<br><br><b>" +
-    kodeQR +
-    "</b><br><br>Menyimpan...";
+    "QR TERBACA<br><br>" +
+    "<b>" + kodeQR + "</b>" +
+    "<br><br>Menyimpan...";
+
+  const data = {
+    kodeQR: kodeQR,
+    namaUser: namaUser
+  };
 
   fetch(WEB_APP_URL, {
+
     method: "POST",
+
     mode: "no-cors",
+
     headers: {
       "Content-Type": "text/plain"
     },
-    body: kodeQR
+
+    body: JSON.stringify(data)
+
   })
   .then(function() {
 
     document.getElementById("hasil").innerHTML =
-      "<span class='success'>✅ BERHASIL</span><br><br>" +
-      "Kode: <b>" + kodeQR + "</b><br><br>" +
-      "Data dikirim ke Google Sheet.";
+      "<span class='success'>✅ BERHASIL</span>" +
+      "<br><br>Kode: <b>" + kodeQR + "</b>" +
+      "<br>Petugas: <b>" + namaUser + "</b>";
 
     setTimeout(function() {
-  location.reload();
-}, 1500);
+
+      location.reload();
+
+    }, 1500);
 
   })
   .catch(function(error) {
@@ -114,27 +283,25 @@ function berhasilScan(kodeQR) {
       "❌ Gagal mengirim data";
 
     sudahScan = false;
+
   });
 }
 
+
 function gagalScan(error) {
-  // Abaikan error scan
+  // error scan diabaikan
 }
 
-const scanner = new Html5QrcodeScanner(
-  "reader",
-  {
-    fps: 10,
-    qrbox: {
-      width: 250,
-      height: 250
-    },
-    rememberLastUsedCamera: true
-  },
-  false
-);
 
-scanner.render(berhasilScan, gagalScan);
+// ================= LOGOUT =================
+
+function logout() {
+
+  sessionStorage.removeItem("jejakkuUser");
+
+  location.reload();
+
+}
 
 </script>
 
