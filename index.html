@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JEJAKKU - Scan QR</title>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7eee9;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 25px 15px;
+    }
+
+    h1 {
+      color: #6b4f45;
+      margin-bottom: 5px;
+    }
+
+    .judul {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    #reader {
+      background: white;
+      border-radius: 15px;
+      padding: 10px;
+    }
+
+    #hasil {
+      margin-top: 20px;
+      padding: 18px;
+      background: white;
+      border-radius: 12px;
+      font-size: 18px;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>JEJAKKU</h1>
+
+  <div class="judul">
+    SCAN QR CODE
+  </div>
+
+  <div id="reader"></div>
+
+  <div id="hasil">
+    Arahkan kamera ke QR Code
+  </div>
+
+</div>
+
+<script>
+
+const WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbwG9WUnSVBaa1bccVvjchz0teJ7edTLhxrYqm1iACQ4FuMYpSmlWOZR9Lv0SmqiMQM/exec";
+
+let sudahScan = false;
+
+function berhasilScan(kodeQR) {
+
+  if (sudahScan) return;
+
+  sudahScan = true;
+
+  document.getElementById("hasil").innerHTML =
+    "QR TERBACA<br><br><b>" +
+    kodeQR +
+    "</b><br><br>Menyimpan...";
+
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: kodeQR
+  })
+  .then(function() {
+
+    document.getElementById("hasil").innerHTML =
+      "<span class='success'>✅ BERHASIL</span><br><br>" +
+      "Kode: <b>" + kodeQR + "</b><br><br>" +
+      "Data dikirim ke Google Sheet.";
+
+    setTimeout(function() {
+      sudahScan = false;
+
+      document.getElementById("hasil").innerHTML =
+        "Silakan scan QR berikutnya";
+
+    }, 3000);
+
+  })
+  .catch(function(error) {
+
+    document.getElementById("hasil").innerHTML =
+      "❌ Gagal mengirim data";
+
+    sudahScan = false;
+  });
+}
+
+function gagalScan(error) {
+  // Abaikan error scan
+}
+
+const scanner = new Html5QrcodeScanner(
+  "reader",
+  {
+    fps: 10,
+    qrbox: {
+      width: 250,
+      height: 250
+    },
+    rememberLastUsedCamera: true
+  },
+  false
+);
+
+scanner.render(berhasilScan, gagalScan);
+
+</script>
+
+</body>
+</html>
