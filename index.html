@@ -4,19 +4,25 @@
 
   <meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>JEJAKKU</title>
 
-  <script src="https://unpkg.com/html5-qrcode"
-          type="text/javascript"></script>
+  <script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
+  </script>
+
 
   <style>
 
     * {
       box-sizing: border-box;
     }
+
 
     body {
 
@@ -32,6 +38,7 @@
 
     }
 
+
     .container {
 
       width: 100%;
@@ -44,6 +51,7 @@
 
     }
 
+
     h1 {
 
       color: #6b4f45;
@@ -54,17 +62,20 @@
 
     }
 
+
     h2 {
 
       color: #6b4f45;
 
     }
 
+
     p {
 
       font-size: 18px;
 
     }
+
 
     input,
     select,
@@ -90,6 +101,7 @@
 
     }
 
+
     button {
 
       width: 90%;
@@ -114,11 +126,13 @@
 
     }
 
+
     button:active {
 
       transform: scale(0.98);
 
     }
+
 
     #loginPage {
 
@@ -126,17 +140,16 @@
 
     }
 
-    #scanPage {
+
+    #scanPage,
+    #dashboardPage,
+    #rekapPage,
+    #adminPage {
 
       display: none;
 
     }
 
-    #dashboardPage {
-
-      display: none;
-
-    }
 
     #reader {
 
@@ -154,6 +167,7 @@
 
     }
 
+
     #hasil {
 
       margin-top: 20px;
@@ -170,6 +184,7 @@
 
     }
 
+
     #formHasil {
 
       display: none;
@@ -183,6 +198,7 @@
       border-radius: 12px;
 
     }
+
 
     .user {
 
@@ -198,6 +214,7 @@
 
     }
 
+
     .error {
 
       color: #d00000;
@@ -208,6 +225,7 @@
 
     }
 
+
     .success {
 
       color: green;
@@ -216,6 +234,7 @@
 
     }
 
+
     .loading {
 
       color: #8a6a60;
@@ -223,6 +242,7 @@
       font-weight: bold;
 
     }
+
 
     .label {
 
@@ -239,6 +259,7 @@
       font-weight: bold;
 
     }
+
 
     .qr-result {
 
@@ -258,6 +279,7 @@
 
     }
 
+
     .dashboard-grid {
 
       display: grid;
@@ -270,6 +292,7 @@
 
     }
 
+
     .card {
 
       background: white;
@@ -280,11 +303,13 @@
 
     }
 
+
     .card-icon {
 
       font-size: 28px;
 
     }
+
 
     .card-number {
 
@@ -296,11 +321,13 @@
 
     }
 
+
     .full-card {
 
       grid-column: 1 / 3;
 
     }
+
 
     .riwayat {
 
@@ -318,6 +345,7 @@
 
     }
 
+
     .admin-box {
 
       background: white;
@@ -330,6 +358,7 @@
 
     }
 
+
     .admin-box input,
     .admin-box select {
 
@@ -339,11 +368,20 @@
 
     }
 
+
     .filter-button {
 
       background: #8a6a60;
 
     }
+
+
+    .logout-button {
+
+      background: #888;
+
+    }
+
 
     .small {
 
@@ -365,11 +403,13 @@
      LOGIN
 ===================================================== -->
 
-<div id="loginPage" class="container">
+<div
+  id="loginPage"
+  class="container">
 
   <h1>JEJAKKU</h1>
 
-  <p>LOGIN PETUGAS / ADMIN</p>
+  <p>LOGIN PETUGAS / REKAP / ADMIN</p>
 
 
   <input
@@ -405,21 +445,23 @@
 </div>
 
 
+
 <!-- =====================================================
      SCANNER PETUGAS
 ===================================================== -->
 
-<div id="scanPage" class="container">
+<div
+  id="scanPage"
+  class="container">
 
   <h1>JEJAKKU</h1>
 
-  <p>SCAN QR CODE</p>
+  <p>📷 SCAN QR CODE</p>
 
 
   <div class="user">
 
     👤 Petugas:
-
     <b id="namaPetugas"></b>
 
   </div>
@@ -452,9 +494,7 @@
 
 
     <div class="label">
-
       Hasil QR Code
-
     </div>
 
 
@@ -466,9 +506,7 @@
 
 
     <div class="label">
-
       Status
-
     </div>
 
 
@@ -498,9 +536,7 @@
 
 
     <div class="label">
-
       Keterangan
-
     </div>
 
 
@@ -529,19 +565,19 @@
 </div>
 
 
-<!-- =====================================================
-     DASHBOARD PETUGAS
-===================================================== -->
 
 <!-- =====================================================
      DASHBOARD PETUGAS
 ===================================================== -->
 
-<div id="dashboardPage" class="container">
+<div
+  id="dashboardPage"
+  class="container">
 
   <h1>JEJAKKU</h1>
 
   <p>📊 DASHBOARD PETUGAS</p>
+
 
   <div class="user">
 
@@ -601,14 +637,139 @@
 
 </div>
 
+
+
+<!-- =====================================================
+     DASHBOARD REKAP AGUNG
+===================================================== -->
+
+<div
+  id="rekapPage"
+  class="container">
+
+  <h1>JEJAKKU</h1>
+
+  <p>📊 DASHBOARD REKAP</p>
+
+
+  <div class="user">
+
+    👤 Petugas Rekap:
+    <b>AGUNG</b>
+
+  </div>
+
+
+  <div class="admin-box">
+
+    <h2>🔎 FILTER REKAP</h2>
+
+
+    <div class="label">
+      📅 Tanggal Mulai
+    </div>
+
+    <input
+      type="date"
+      id="tanggalMulaiRekap"
+    >
+
+
+    <div class="label">
+      📅 Tanggal Akhir
+    </div>
+
+    <input
+      type="date"
+      id="tanggalAkhirRekap"
+    >
+
+
+    <div class="label">
+      👤 Pilih Petugas
+    </div>
+
+    <select id="filterPetugasRekap">
+
+      <option value="">
+        SEMUA PETUGAS
+      </option>
+
+      <option value="LILIS">
+        LILIS
+      </option>
+
+      <option value="ANDINA">
+        ANDINA
+      </option>
+
+      <option value="EMA">
+        EMA
+      </option>
+
+      <option value="LIA">
+        LIA
+      </option>
+
+      <option value="BAMBANG">
+        BAMBANG
+      </option>
+
+      <option value="SIGIT">
+        SIGIT
+      </option>
+
+      <option value="RIESCHA">
+        RIESCHA
+      </option>
+
+      <option value="YANTO">
+        YANTO
+      </option>
+
+    </select>
+
+
+    <button
+      type="button"
+      class="filter-button"
+      onclick="jalankanFilterRekap()">
+
+      🔎 TAMPILKAN REKAP
+
+    </button>
+
+  </div>
+
+
+  <div id="rekapHasil">
+
+    Pilih periode kemudian tekan
+    <b>TAMPILKAN REKAP</b>.
+
+  </div>
+
+
+  <button
+    type="button"
+    class="logout-button"
+    onclick="keluarAplikasi()">
+
+    🔐 KEMBALI LOGIN
+
+  </button>
+
+</div>
+
+
+
 <!-- =====================================================
      DASHBOARD ADMIN
 ===================================================== -->
 
 <div
   id="adminPage"
-  class="container"
-  style="display:none;">
+  class="container">
 
   <h1>JEJAKKU</h1>
 
@@ -622,17 +783,13 @@
   </div>
 
 
-  <!-- FILTER -->
-
   <div class="admin-box">
 
     <h2>🔎 FILTER DATA</h2>
 
 
     <div class="label">
-
-      Tanggal Mulai
-
+      📅 Tanggal Mulai
     </div>
 
     <input
@@ -642,9 +799,7 @@
 
 
     <div class="label">
-
-      Tanggal Akhir
-
+      📅 Tanggal Akhir
     </div>
 
     <input
@@ -654,14 +809,12 @@
 
 
     <div class="label">
-
-      Petugas
-
+      👤 Petugas
     </div>
 
     <select id="filterPetugas">
 
-      <option value="SEMUA">
+      <option value="">
         SEMUA PETUGAS
       </option>
 
@@ -724,13 +877,15 @@
 
   <button
     type="button"
-    onclick="keluarAdmin()">
+    class="logout-button"
+    onclick="keluarAplikasi()">
 
     🔐 KEMBALI LOGIN
 
   </button>
 
 </div>
+
 
 
 <script>
@@ -742,6 +897,7 @@
 
 const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbwG9WUnSVBaa1bccVvjchz0teJ7edTLhxrYqm1iACQ4FuMYpSmlWOZR9Lv0SmqiMQM/exec";
+
 
 
 /* =====================================================
@@ -763,6 +919,7 @@ let kodeQRhasil = "";
 let html5QrCode = null;
 
 
+
 /* =====================================================
    LOGIN
 ===================================================== */
@@ -770,18 +927,12 @@ let html5QrCode = null;
 function login() {
 
   const username =
-    document
-      .getElementById("username")
-      .value
-      .trim();
-
+    document.getElementById("username")
+      .value.trim();
 
   const password =
-    document
-      .getElementById("password")
-      .value
-      .trim();
-
+    document.getElementById("password")
+      .value.trim();
 
   const errorBox =
     document.getElementById("loginError");
@@ -804,17 +955,12 @@ function login() {
 
 
   const url =
-
     WEB_APP_URL +
-
     "?action=login" +
-
     "&username=" +
     encodeURIComponent(username) +
-
     "&password=" +
     encodeURIComponent(password) +
-
     "&t=" +
     new Date().getTime();
 
@@ -845,15 +991,11 @@ function login() {
       }
 
 
-      /* SIMPAN IDENTITAS */
-
       namaUser =
         result.nama;
 
-
       usernameAktif =
         result.username;
-
 
       roleAktif =
         result.role || "petugas";
@@ -864,12 +1006,10 @@ function login() {
         namaUser
       );
 
-
       sessionStorage.setItem(
         "jejakkuUsername",
         usernameAktif
       );
-
 
       sessionStorage.setItem(
         "jejakkuRole",
@@ -877,13 +1017,11 @@ function login() {
       );
 
 
-      /* ===============================================
-         ADMIN
-      =============================================== */
+      // ==========================================
+      // ARAHKAN BERDASARKAN ROLE
+      // ==========================================
 
-      if (
-        roleAktif === "admin"
-      ) {
+      if (roleAktif === "admin") {
 
         tampilAdmin();
 
@@ -892,9 +1030,16 @@ function login() {
       }
 
 
-      /* ===============================================
-         PETUGAS
-      =============================================== */
+      if (roleAktif === "rekap") {
+
+        tampilRekap();
+
+        return;
+
+      }
+
+
+      // DEFAULT = PETUGAS
 
       tampilScanner();
 
@@ -913,6 +1058,7 @@ function login() {
 }
 
 
+
 /* =====================================================
    TAMPIL SCANNER
 ===================================================== */
@@ -921,38 +1067,37 @@ function tampilScanner() {
 
   document
     .getElementById("loginPage")
-    .style.display =
-      "none";
-
-
-  document
-    .getElementById("adminPage")
-    .style.display =
-      "none";
+    .style.display = "none";
 
 
   document
     .getElementById("dashboardPage")
-    .style.display =
-      "none";
+    .style.display = "none";
+
+
+  document
+    .getElementById("rekapPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("adminPage")
+    .style.display = "none";
 
 
   document
     .getElementById("scanPage")
-    .style.display =
-      "block";
+    .style.display = "block";
 
 
   document
     .getElementById("namaPetugas")
-    .innerText =
-      namaUser;
+    .innerText = namaUser;
 
 
   document
     .getElementById("formHasil")
-    .style.display =
-      "none";
+    .style.display = "none";
 
 
   setTimeout(function() {
@@ -962,6 +1107,7 @@ function tampilScanner() {
   }, 400);
 
 }
+
 
 
 /* =====================================================
@@ -1010,7 +1156,7 @@ function mulaiScanner() {
 
     function(errorMessage) {
 
-      // Abaikan error scan
+      // Abaikan error pembacaan
 
     }
 
@@ -1022,11 +1168,9 @@ function mulaiScanner() {
       .getElementById("hasil")
       .innerHTML =
 
-        "📷 <b>KAMERA AKTIF</b>" +
-
-        "<br><br>" +
-
-        "Arahkan kamera ke QR Code";
+      "📷 <b>KAMERA AKTIF</b>" +
+      "<br><br>" +
+      "Arahkan kamera ke QR Code";
 
   })
 
@@ -1038,15 +1182,14 @@ function mulaiScanner() {
       .getElementById("hasil")
       .innerHTML =
 
-        "❌ <b>KAMERA TIDAK DAPAT DIAKSES</b>" +
-
-        "<br><br>" +
-
-        "Pastikan izin kamera browser aktif.";
+      "❌ <b>KAMERA TIDAK DAPAT DIAKSES</b>" +
+      "<br><br>" +
+      "Pastikan izin kamera browser aktif.";
 
   });
 
 }
+
 
 
 /* =====================================================
@@ -1120,8 +1263,9 @@ function berhasilScan(kodeQR) {
 }
 
 
+
 /* =====================================================
-   SIMPAN SCAN
+   SIMPAN DATA
 ===================================================== */
 
 function simpanData() {
@@ -1134,14 +1278,12 @@ function simpanData() {
 
 
   const status =
-
     document
       .getElementById("status")
       .value;
 
 
   const keterangan =
-
     document
       .getElementById("keterangan")
       .value
@@ -1149,7 +1291,6 @@ function simpanData() {
 
 
   const errorBox =
-
     document
       .getElementById("formError");
 
@@ -1203,23 +1344,27 @@ function simpanData() {
   };
 
 
-  fetch(WEB_APP_URL, {
+  fetch(
+    WEB_APP_URL,
+    {
 
-    method: "POST",
+      method: "POST",
 
-    mode: "no-cors",
+      mode: "no-cors",
 
-    headers: {
+      headers: {
 
-      "Content-Type":
-        "text/plain"
+        "Content-Type":
+          "text/plain"
 
-    },
+      },
 
-    body:
-      JSON.stringify(data)
+      body:
+        JSON.stringify(data)
 
-  })
+    }
+
+  )
 
   .then(function() {
 
@@ -1233,22 +1378,24 @@ function simpanData() {
       .getElementById("hasil")
       .innerHTML =
 
-        "<span class='success'>" +
-        "✅ DATA BERHASIL DISIMPAN" +
-        "</span>" +
+      "<span class='success'>" +
+      "✅ DATA BERHASIL DISIMPAN" +
+      "</span>" +
 
-        "<br><br>" +
+      "<br><br>" +
 
-        "Petugas: <b>" +
-        namaUser +
-        "</b>" +
+      "Petugas: <b>" +
+      namaUser +
+      "</b>" +
 
-        "<br>" +
+      "<br>" +
 
-        "Status: <b>" +
-        status +
-        "</b>";
+      "Status: <b>" +
+      status +
+      "</b>";
 
+
+    // Kembali scan otomatis
 
     setTimeout(function() {
 
@@ -1272,6 +1419,7 @@ function simpanData() {
 }
 
 
+
 /* =====================================================
    DASHBOARD PETUGAS
 ===================================================== */
@@ -1293,6 +1441,16 @@ function tampilDashboardPetugas() {
 
 
   document
+    .getElementById("rekapPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("adminPage")
+    .style.display = "none";
+
+
+  document
     .getElementById("dashboardPage")
     .style.display = "block";
 
@@ -1302,19 +1460,19 @@ function tampilDashboardPetugas() {
     .innerText = namaUser;
 
 
-  // ==============================
-  // TANGGAL HARI INI
-  // ==============================
+  var sekarang =
+    new Date();
 
-  var sekarang = new Date();
 
   var tahun =
     sekarang.getFullYear();
+
 
   var bulan =
     String(
       sekarang.getMonth() + 1
     ).padStart(2, "0");
+
 
   var tanggal =
     String(
@@ -1328,20 +1486,25 @@ function tampilDashboardPetugas() {
     tanggal;
 
 
-  // Awal bulan
   var awalBulan =
     tahun + "-" +
     bulan + "-01";
 
 
   document
-    .getElementById("tanggalMulaiPetugas")
-    .value = awalBulan;
+    .getElementById(
+      "tanggalMulaiPetugas"
+    )
+    .value =
+      awalBulan;
 
 
   document
-    .getElementById("tanggalAkhirPetugas")
-    .value = hariIni;
+    .getElementById(
+      "tanggalAkhirPetugas"
+    )
+    .value =
+      hariIni;
 
 
   tampilDataPetugas();
@@ -1349,23 +1512,40 @@ function tampilDashboardPetugas() {
 }
 
 
-// =====================================================
-// DATA DASHBOARD PETUGAS BERDASARKAN TANGGAL
-// =====================================================
+
+/* =====================================================
+   DATA DASHBOARD PETUGAS
+===================================================== */
 
 function tampilDataPetugas() {
 
   var tanggalMulai =
-    document.getElementById("tanggalMulaiPetugas").value;
+    document
+      .getElementById(
+        "tanggalMulaiPetugas"
+      )
+      .value;
+
 
   var tanggalAkhir =
-    document.getElementById("tanggalAkhirPetugas").value;
+    document
+      .getElementById(
+        "tanggalAkhirPetugas"
+      )
+      .value;
+
 
   var hasil =
-    document.getElementById("dashboardHasil");
+    document
+      .getElementById(
+        "dashboardHasil"
+      );
 
 
-  if (!tanggalMulai || !tanggalAkhir) {
+  if (
+    !tanggalMulai ||
+    !tanggalAkhir
+  ) {
 
     hasil.innerHTML =
       "❌ Tanggal mulai dan tanggal akhir wajib diisi.";
@@ -1375,7 +1555,10 @@ function tampilDataPetugas() {
   }
 
 
-  if (tanggalMulai > tanggalAkhir) {
+  if (
+    tanggalMulai >
+    tanggalAkhir
+  ) {
 
     hasil.innerHTML =
       "❌ Tanggal mulai tidak boleh lebih besar dari tanggal akhir.";
@@ -1393,13 +1576,24 @@ function tampilDataPetugas() {
 
   var url =
     WEB_APP_URL +
+
     "?action=dashboard" +
+
     "&namaUser=" +
-    encodeURIComponent(namaUser) +
+    encodeURIComponent(
+      namaUser
+    ) +
+
     "&tanggalMulai=" +
-    encodeURIComponent(tanggalMulai) +
+    encodeURIComponent(
+      tanggalMulai
+    ) +
+
     "&tanggalAkhir=" +
-    encodeURIComponent(tanggalAkhir) +
+    encodeURIComponent(
+      tanggalAkhir
+    ) +
+
     "&t=" +
     new Date().getTime();
 
@@ -1414,7 +1608,9 @@ function tampilDataPetugas() {
 
     .then(function(data) {
 
-      tampilDashboardPetugasData(data);
+      tampilDashboardPetugasData(
+        data
+      );
 
     })
 
@@ -1428,9 +1624,11 @@ function tampilDataPetugas() {
     });
 
 }
-  
+
+
+
 /* =====================================================
-   DATA DASHBOARD PETUGAS
+   HASIL DASHBOARD PETUGAS
 ===================================================== */
 
 function tampilDashboardPetugasData(data) {
@@ -1441,7 +1639,9 @@ function tampilDashboardPetugasData(data) {
 
       <div class="card">
 
-        <div class="card-icon">📋</div>
+        <div class="card-icon">
+          📋
+        </div>
 
         <b>Total Scan</b>
 
@@ -1454,7 +1654,9 @@ function tampilDashboardPetugasData(data) {
 
       <div class="card">
 
-        <div class="card-icon">📥</div>
+        <div class="card-icon">
+          📥
+        </div>
 
         <b>Diterima</b>
 
@@ -1467,7 +1669,9 @@ function tampilDashboardPetugasData(data) {
 
       <div class="card">
 
-        <div class="card-icon">🔄</div>
+        <div class="card-icon">
+          🔄
+        </div>
 
         <b>Diproses</b>
 
@@ -1480,7 +1684,9 @@ function tampilDashboardPetugasData(data) {
 
       <div class="card">
 
-        <div class="card-icon">✅</div>
+        <div class="card-icon">
+          ✅
+        </div>
 
         <b>Selesai</b>
 
@@ -1493,7 +1699,9 @@ function tampilDashboardPetugasData(data) {
 
       <div class="card full-card">
 
-        <div class="card-icon">↩️</div>
+        <div class="card-icon">
+          ↩️
+        </div>
 
         <b>Dikembalikan</b>
 
@@ -1505,7 +1713,10 @@ function tampilDashboardPetugasData(data) {
 
     </div>
 
-    <h2>📋 RIWAYAT TERBARU</h2>
+
+    <h2>
+      📋 RIWAYAT SCAN
+    </h2>
 
   `;
 
@@ -1516,54 +1727,63 @@ function tampilDashboardPetugasData(data) {
   ) {
 
     html += `
+
       <div class="riwayat">
-        Belum ada data.
+
+        Belum ada data pada periode tersebut.
+
       </div>
+
     `;
 
   }
 
   else {
 
-    data.riwayat.forEach(function(item) {
+    data.riwayat.forEach(
+      function(item) {
 
-      html += `
+        html += `
 
-        <div class="riwayat">
+          <div class="riwayat">
 
-          <b>${item.kodeQR}</b>
+            <b>${item.kodeQR}</b>
 
-          <br><br>
+            <br><br>
 
-          🕐 ${item.waktu}
+            🕐 ${item.waktu}
 
-          <br>
+            <br>
 
-          👤 ${item.petugas}
+            👤 ${item.petugas}
 
-          <br>
+            <br>
 
-          📌 <b>${item.status}</b>
+            📌 <b>${item.status}</b>
 
-          <br>
+            <br>
 
-          📝 ${item.keterangan}
+            📝 ${item.keterangan}
 
-        </div>
+          </div>
 
-      `;
+        `;
 
-    });
+      }
+    );
 
   }
 
 
   document
-    .getElementById("dashboardHasil")
+    .getElementById(
+      "dashboardHasil"
+    )
     .innerHTML =
       html;
 
 }
+
 
 
 /* =====================================================
@@ -1573,7 +1793,9 @@ function tampilDashboardPetugasData(data) {
 function kembaliScanner() {
 
   document
-    .getElementById("dashboardPage")
+    .getElementById(
+      "dashboardPage"
+    )
     .style.display =
       "none";
 
@@ -1583,110 +1805,130 @@ function kembaliScanner() {
 }
 
 
+
 /* =====================================================
-   ADMIN
+   DASHBOARD REKAP AGUNG
 ===================================================== */
 
-function tampilAdmin() {
+function tampilRekap() {
+
+  // Sembunyikan halaman lain
 
   document
     .getElementById("loginPage")
-    .style.display =
-      "none";
+    .style.display = "none";
 
 
   document
     .getElementById("scanPage")
-    .style.display =
-      "none";
+    .style.display = "none";
 
 
   document
     .getElementById("dashboardPage")
-    .style.display =
-      "none";
+    .style.display = "none";
 
 
   document
     .getElementById("adminPage")
-    .style.display =
-      "block";
+    .style.display = "none";
 
 
-  /* DEFAULT TANGGAL HARI INI */
+  document
+    .getElementById("rekapPage")
+    .style.display = "block";
 
-  const sekarang =
+
+  // Tanggal default
+
+  var sekarang =
     new Date();
 
 
-  const tahun =
+  var tahun =
     sekarang.getFullYear();
 
 
-  const bulan =
+  var bulan =
     String(
       sekarang.getMonth() + 1
     ).padStart(2, "0");
 
 
-  const tanggal =
+  var tanggal =
     String(
       sekarang.getDate()
     ).padStart(2, "0");
 
 
-  const hariIni =
-    tahun +
-    "-" +
-    bulan +
-    "-" +
+  var hariIni =
+    tahun + "-" +
+    bulan + "-" +
     tanggal;
 
 
+  var awalBulan =
+    tahun + "-" +
+    bulan + "-01";
+
+
   document
-    .getElementById("tanggalMulai")
+    .getElementById(
+      "tanggalMulaiRekap"
+    )
+    .value =
+      awalBulan;
+
+
+  document
+    .getElementById(
+      "tanggalAkhirRekap"
+    )
     .value =
       hariIni;
 
 
-  document
-    .getElementById("tanggalAkhir")
-    .value =
-      hariIni;
-
-
-  jalankanFilterAdmin();
+  jalankanFilterRekap();
 
 }
 
 
+
 /* =====================================================
-   FILTER ADMIN
+   FILTER REKAP AGUNG
 ===================================================== */
 
-function jalankanFilterAdmin() {
+function jalankanFilterRekap() {
 
-  const mulai =
+  var mulai =
     document
-      .getElementById("tanggalMulai")
+      .getElementById(
+        "tanggalMulaiRekap"
+      )
       .value;
 
 
-  const akhir =
+  var akhir =
     document
-      .getElementById("tanggalAkhir")
+      .getElementById(
+        "tanggalAkhirRekap"
+      )
       .value;
 
 
-  const petugas =
+  var petugas =
     document
-      .getElementById("filterPetugas")
+      .getElementById(
+        "filterPetugasRekap"
+      )
       .value;
 
 
-  const hasil =
+  var hasil =
     document
-      .getElementById("adminHasil");
+      .getElementById(
+        "rekapHasil"
+      );
 
 
   if (!mulai || !akhir) {
@@ -1710,23 +1952,28 @@ function jalankanFilterAdmin() {
 
 
   hasil.innerHTML =
-    "⏳ Memuat data...";
+    "⏳ Memuat rekap...";
 
 
-  const url =
-
+  var url =
     WEB_APP_URL +
 
-    "?action=adminFilter" +
+    "?action=rekap" +
 
-    "&mulai=" +
-    encodeURIComponent(mulai) +
+    "&tanggalMulai=" +
+    encodeURIComponent(
+      mulai
+    ) +
 
-    "&akhir=" +
-    encodeURIComponent(akhir) +
+    "&tanggalAkhir=" +
+    encodeURIComponent(
+      akhir
+    ) +
 
     "&petugas=" +
-    encodeURIComponent(petugas) +
+    encodeURIComponent(
+      petugas
+    ) +
 
     "&t=" +
     new Date().getTime();
@@ -1742,7 +1989,9 @@ function jalankanFilterAdmin() {
 
     .then(function(data) {
 
-      tampilHasilAdmin(data);
+      tampilHasilRekap(
+        data
+      );
 
     })
 
@@ -1751,18 +2000,19 @@ function jalankanFilterAdmin() {
       console.error(error);
 
       hasil.innerHTML =
-        "❌ Gagal mengambil data.";
+        "❌ Gagal mengambil rekap.";
 
     });
 
 }
 
 
+
 /* =====================================================
-   TAMPIL HASIL ADMIN
+   HASIL REKAP
 ===================================================== */
 
-function tampilHasilAdmin(data) {
+function tampilHasilRekap(data) {
 
   let html = `
 
@@ -1770,7 +2020,9 @@ function tampilHasilAdmin(data) {
 
       <div class="card">
 
-        <div class="card-icon">📋</div>
+        <div class="card-icon">
+          📋
+        </div>
 
         <b>Total Scan</b>
 
@@ -1783,7 +2035,9 @@ function tampilHasilAdmin(data) {
 
       <div class="card">
 
-        <div class="card-icon">📥</div>
+        <div class="card-icon">
+          📥
+        </div>
 
         <b>Diterima</b>
 
@@ -1796,7 +2050,9 @@ function tampilHasilAdmin(data) {
 
       <div class="card">
 
-        <div class="card-icon">🔄</div>
+        <div class="card-icon">
+          🔄
+        </div>
 
         <b>Diproses</b>
 
@@ -1809,7 +2065,9 @@ function tampilHasilAdmin(data) {
 
       <div class="card">
 
-        <div class="card-icon">✅</div>
+        <div class="card-icon">
+          ✅
+        </div>
 
         <b>Selesai</b>
 
@@ -1822,7 +2080,9 @@ function tampilHasilAdmin(data) {
 
       <div class="card full-card">
 
-        <div class="card-icon">↩️</div>
+        <div class="card-icon">
+          ↩️
+        </div>
 
         <b>Dikembalikan</b>
 
@@ -1836,17 +2096,15 @@ function tampilHasilAdmin(data) {
 
 
     <h2>
-      👥 REKAP PETUGAS
+      👥 REKAP PER PETUGAS
     </h2>
 
   `;
 
 
-  /* REKAP PETUGAS */
-
   if (
-    !data.daftarPetugas ||
-    data.daftarPetugas.length === 0
+    !data.perPetugas ||
+    data.perPetugas.length === 0
   ) {
 
     html += `
@@ -1863,30 +2121,49 @@ function tampilHasilAdmin(data) {
 
   else {
 
-    data.daftarPetugas.forEach(function(item) {
+    data.perPetugas.forEach(
+      function(item) {
 
-      html += `
+        html += `
 
-        <div class="riwayat">
+          <div class="riwayat">
 
-          👤 <b>${item.nama}</b>
+            👤 <b>${item.nama}</b>
 
-          <br>
+            <br><br>
 
-          📊 Jumlah Scan:
+            📊 Total Scan:
+            <b>${item.total}</b>
 
-          <b>${item.jumlah}</b>
+            <br>
 
-        </div>
+            📥 Diterima:
+            <b>${item.diterima}</b>
 
-      `;
+            <br>
 
-    });
+            🔄 Diproses:
+            <b>${item.diproses}</b>
+
+            <br>
+
+            ✅ Selesai:
+            <b>${item.selesai}</b>
+
+            <br>
+
+            ↩️ Dikembalikan:
+            <b>${item.dikembalikan}</b>
+
+          </div>
+
+        `;
+
+      }
+    );
 
   }
 
-
-  /* DETAIL */
 
   html += `
 
@@ -1916,58 +2193,512 @@ function tampilHasilAdmin(data) {
 
   else {
 
-    data.riwayat.forEach(function(item) {
+    data.riwayat.forEach(
+      function(item) {
 
-      html += `
+        html += `
 
-        <div class="riwayat">
+          <div class="riwayat">
 
-          <b>${item.kodeQR}</b>
+            <b>${item.kodeQR}</b>
 
-          <br><br>
+            <br><br>
 
-          🕐 ${item.waktu}
+            🕐 ${item.waktu}
 
-          <br>
+            <br>
 
-          👤 ${item.petugas}
+            👤 ${item.petugas}
 
-          <br>
+            <br>
 
-          📌 <b>${item.status}</b>
+            📌 <b>${item.status}</b>
 
-          <br>
+            <br>
 
-          📝 ${item.keterangan}
+            📝 ${item.keterangan}
 
-        </div>
+          </div>
 
-      `;
+        `;
 
-    });
+      }
+    );
 
   }
 
 
   document
-    .getElementById("adminHasil")
+    .getElementById(
+      "rekapHasil"
+    )
     .innerHTML =
       html;
 
 }
 
 
+
 /* =====================================================
-   KELUAR ADMIN
+   DASHBOARD ADMIN
 ===================================================== */
 
-function keluarAdmin() {
+function tampilAdmin() {
+
+  document
+    .getElementById("loginPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("scanPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("dashboardPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("rekapPage")
+    .style.display = "none";
+
+
+  document
+    .getElementById("adminPage")
+    .style.display = "block";
+
+
+  var sekarang =
+    new Date();
+
+
+  var tahun =
+    sekarang.getFullYear();
+
+
+  var bulan =
+    String(
+      sekarang.getMonth() + 1
+    ).padStart(2, "0");
+
+
+  var tanggal =
+    String(
+      sekarang.getDate()
+    ).padStart(2, "0");
+
+
+  var hariIni =
+    tahun + "-" +
+    bulan + "-" +
+    tanggal;
+
+
+  var awalBulan =
+    tahun + "-" +
+    bulan + "-01";
+
+
+  document
+    .getElementById(
+      "tanggalMulai"
+    )
+    .value =
+      awalBulan;
+
+
+  document
+    .getElementById(
+      "tanggalAkhir"
+    )
+    .value =
+      hariIni;
+
+
+  jalankanFilterAdmin();
+
+}
+
+
+
+/* =====================================================
+   FILTER ADMIN
+===================================================== */
+
+function jalankanFilterAdmin() {
+
+  var mulai =
+    document
+      .getElementById(
+        "tanggalMulai"
+      )
+      .value;
+
+
+  var akhir =
+    document
+      .getElementById(
+        "tanggalAkhir"
+      )
+      .value;
+
+
+  var petugas =
+    document
+      .getElementById(
+        "filterPetugas"
+      )
+      .value;
+
+
+  var hasil =
+    document
+      .getElementById(
+        "adminHasil"
+      );
+
+
+  if (!mulai || !akhir) {
+
+    hasil.innerHTML =
+      "❌ Tanggal mulai dan akhir wajib dipilih.";
+
+    return;
+
+  }
+
+
+  if (mulai > akhir) {
+
+    hasil.innerHTML =
+      "❌ Tanggal mulai tidak boleh lebih besar.";
+
+    return;
+
+  }
+
+
+  hasil.innerHTML =
+    "⏳ Memuat data...";
+
+
+  var url =
+    WEB_APP_URL +
+
+    "?action=adminDashboard" +
+
+    "&tanggalMulai=" +
+    encodeURIComponent(
+      mulai
+    ) +
+
+    "&tanggalAkhir=" +
+    encodeURIComponent(
+      akhir
+    ) +
+
+    "&petugas=" +
+    encodeURIComponent(
+      petugas
+    ) +
+
+    "&t=" +
+    new Date().getTime();
+
+
+  fetch(url)
+
+    .then(function(response) {
+
+      return response.json();
+
+    })
+
+    .then(function(data) {
+
+      tampilHasilAdmin(
+        data
+      );
+
+    })
+
+    .catch(function(error) {
+
+      console.error(error);
+
+      hasil.innerHTML =
+        "❌ Gagal mengambil data.";
+
+    });
+
+}
+
+
+
+/* =====================================================
+   HASIL ADMIN
+===================================================== */
+
+function tampilHasilAdmin(data) {
+
+  let html = `
+
+    <div class="dashboard-grid">
+
+      <div class="card">
+
+        <div class="card-icon">
+          📋
+        </div>
+
+        <b>Total Scan</b>
+
+        <div class="card-number">
+          ${data.total}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-icon">
+          📥
+        </div>
+
+        <b>Diterima</b>
+
+        <div class="card-number">
+          ${data.diterima}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-icon">
+          🔄
+        </div>
+
+        <b>Diproses</b>
+
+        <div class="card-number">
+          ${data.diproses}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-icon">
+          ✅
+        </div>
+
+        <b>Selesai</b>
+
+        <div class="card-number">
+          ${data.selesai}
+        </div>
+
+      </div>
+
+
+      <div class="card full-card">
+
+        <div class="card-icon">
+          ↩️
+        </div>
+
+        <b>Dikembalikan</b>
+
+        <div class="card-number">
+          ${data.dikembalikan}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <h2>
+      👥 REKAP PER PETUGAS
+    </h2>
+
+  `;
+
+
+  if (
+    !data.perPetugas ||
+    data.perPetugas.length === 0
+  ) {
+
+    html += `
+
+      <div class="riwayat">
+
+        Tidak ada data pada periode tersebut.
+
+      </div>
+
+    `;
+
+  }
+
+  else {
+
+    data.perPetugas.forEach(
+      function(item) {
+
+        html += `
+
+          <div class="riwayat">
+
+            👤 <b>${item.nama}</b>
+
+            <br><br>
+
+            📊 Total Scan:
+            <b>${item.total}</b>
+
+            <br>
+
+            📥 Diterima:
+            <b>${item.diterima}</b>
+
+            <br>
+
+            🔄 Diproses:
+            <b>${item.diproses}</b>
+
+            <br>
+
+            ✅ Selesai:
+            <b>${item.selesai}</b>
+
+            <br>
+
+            ↩️ Dikembalikan:
+            <b>${item.dikembalikan}</b>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+
+  html += `
+
+    <h2>
+      📋 DETAIL SCAN
+    </h2>
+
+  `;
+
+
+  if (
+    !data.riwayat ||
+    data.riwayat.length === 0
+  ) {
+
+    html += `
+
+      <div class="riwayat">
+
+        Tidak ada data.
+
+      </div>
+
+    `;
+
+  }
+
+  else {
+
+    data.riwayat.forEach(
+      function(item) {
+
+        html += `
+
+          <div class="riwayat">
+
+            <b>${item.kodeQR}</b>
+
+            <br><br>
+
+            🕐 ${item.waktu}
+
+            <br>
+
+            👤 ${item.petugas}
+
+            <br>
+
+            📌 <b>${item.status}</b>
+
+            <br>
+
+            📝 ${item.keterangan}
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+
+  document
+    .getElementById(
+      "adminHasil"
+    )
+    .innerHTML =
+      html;
+
+}
+
+
+
+/* =====================================================
+   KELUAR
+===================================================== */
+
+function keluarAplikasi() {
+
+  if (html5QrCode) {
+
+    html5QrCode
+      .stop()
+      .catch(function() {});
+
+  }
+
 
   sessionStorage.clear();
+
+
+  namaUser = "";
+
+  usernameAktif = "";
+
+  roleAktif = "";
+
+  kodeQRhasil = "";
+
 
   location.reload();
 
 }
+
 
 </script>
 
