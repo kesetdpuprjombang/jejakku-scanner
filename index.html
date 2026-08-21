@@ -174,19 +174,56 @@ function login() {
   const password =
     document.getElementById("password").value.trim();
 
-  if (username === "admin" && password === "12345") {
-
-    namaUser = "Admin";
-
-    sessionStorage.setItem("jejakkuUser", namaUser);
-
-    tampilScanner();
-
-  } else {
+  if (!username || !password) {
 
     document.getElementById("loginError").innerHTML =
-      "❌ Username atau password salah";
+      "❌ Username dan password wajib diisi";
+
+    return;
   }
+
+  document.getElementById("loginError").innerHTML =
+    "⏳ Memeriksa login...";
+
+  fetch(
+    WEB_APP_URL +
+    "?action=login&username=" +
+    encodeURIComponent(username) +
+    "&password=" +
+    encodeURIComponent(password)
+  )
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(result) {
+
+    if (result.berhasil) {
+
+      namaUser = result.nama;
+
+      sessionStorage.setItem(
+        "jejakkuUser",
+        namaUser
+      );
+
+      tampilScanner();
+
+    } else {
+
+      document.getElementById("loginError").innerHTML =
+        "❌ Username atau password salah";
+
+    }
+
+  })
+  .catch(function(error) {
+
+    console.error(error);
+
+    document.getElementById("loginError").innerHTML =
+      "❌ Tidak dapat terhubung ke server";
+
+  });
 }
 
 
