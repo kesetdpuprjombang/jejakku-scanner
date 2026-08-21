@@ -533,6 +533,10 @@
      DASHBOARD PETUGAS
 ===================================================== -->
 
+<!-- =====================================================
+     DASHBOARD PETUGAS
+===================================================== -->
+
 <div id="dashboardPage" class="container">
 
   <h1>JEJAKKU</h1>
@@ -540,20 +544,34 @@
   <p>📊 DASHBOARD PETUGAS</p>
 
   <div class="user">
+
     👤 Petugas:
     <b id="namaPetugasDashboard"></b>
+
   </div>
+
 
   <div class="admin-box">
 
     <div class="label">
-      📅 Pilih Tanggal
+      📅 Tanggal Mulai
     </div>
 
     <input
       type="date"
-      id="tanggalDashboard"
+      id="tanggalMulaiPetugas"
     >
+
+
+    <div class="label">
+      📅 Tanggal Akhir
+    </div>
+
+    <input
+      type="date"
+      id="tanggalAkhirPetugas"
+    >
+
 
     <button
       type="button"
@@ -565,9 +583,13 @@
 
   </div>
 
+
   <div id="dashboardHasil">
+
     ⏳ Memuat data...
+
   </div>
+
 
   <button
     type="button"
@@ -1256,20 +1278,29 @@ function simpanData() {
 
 function tampilDashboardPetugas() {
 
-  // Matikan kamera
   if (html5QrCode) {
-    html5QrCode.stop().catch(function() {});
+
+    html5QrCode
+      .stop()
+      .catch(function() {});
+
   }
 
-  // Sembunyikan scanner
-  document.getElementById("scanPage").style.display = "none";
 
-  // Tampilkan dashboard
-  document.getElementById("dashboardPage").style.display = "block";
+  document
+    .getElementById("scanPage")
+    .style.display = "none";
 
-  // Nama petugas otomatis
-  document.getElementById("namaPetugasDashboard").innerText =
-    namaUser;
+
+  document
+    .getElementById("dashboardPage")
+    .style.display = "block";
+
+
+  document
+    .getElementById("namaPetugasDashboard")
+    .innerText = namaUser;
+
 
   // ==============================
   // TANGGAL HARI INI
@@ -1277,26 +1308,44 @@ function tampilDashboardPetugas() {
 
   var sekarang = new Date();
 
-  var tahun = sekarang.getFullYear();
+  var tahun =
+    sekarang.getFullYear();
 
-  var bulan = String(
-    sekarang.getMonth() + 1
-  ).padStart(2, "0");
+  var bulan =
+    String(
+      sekarang.getMonth() + 1
+    ).padStart(2, "0");
 
-  var tanggal = String(
-    sekarang.getDate()
-  ).padStart(2, "0");
+  var tanggal =
+    String(
+      sekarang.getDate()
+    ).padStart(2, "0");
+
 
   var hariIni =
     tahun + "-" +
     bulan + "-" +
     tanggal;
 
-  document.getElementById("tanggalDashboard").value =
-    hariIni;
 
-  // Tampilkan data hari ini
+  // Awal bulan
+  var awalBulan =
+    tahun + "-" +
+    bulan + "-01";
+
+
+  document
+    .getElementById("tanggalMulaiPetugas")
+    .value = awalBulan;
+
+
+  document
+    .getElementById("tanggalAkhirPetugas")
+    .value = hariIni;
+
+
   tampilDataPetugas();
+
 }
 
 
@@ -1306,20 +1355,35 @@ function tampilDashboardPetugas() {
 
 function tampilDataPetugas() {
 
-  var tanggal =
-    document.getElementById("tanggalDashboard").value;
+  var tanggalMulai =
+    document.getElementById("tanggalMulaiPetugas").value;
+
+  var tanggalAkhir =
+    document.getElementById("tanggalAkhirPetugas").value;
 
   var hasil =
     document.getElementById("dashboardHasil");
 
-  if (!tanggal) {
+
+  if (!tanggalMulai || !tanggalAkhir) {
 
     hasil.innerHTML =
-      "❌ Silakan pilih tanggal.";
+      "❌ Tanggal mulai dan tanggal akhir wajib diisi.";
 
     return;
 
   }
+
+
+  if (tanggalMulai > tanggalAkhir) {
+
+    hasil.innerHTML =
+      "❌ Tanggal mulai tidak boleh lebih besar dari tanggal akhir.";
+
+    return;
+
+  }
+
 
   hasil.innerHTML =
     "⏳ Memuat data " +
@@ -1332,8 +1396,10 @@ function tampilDataPetugas() {
     "?action=dashboard" +
     "&namaUser=" +
     encodeURIComponent(namaUser) +
-    "&tanggal=" +
-    encodeURIComponent(tanggal) +
+    "&tanggalMulai=" +
+    encodeURIComponent(tanggalMulai) +
+    "&tanggalAkhir=" +
+    encodeURIComponent(tanggalAkhir) +
     "&t=" +
     new Date().getTime();
 
@@ -1362,7 +1428,6 @@ function tampilDataPetugas() {
     });
 
 }
-
   
 /* =====================================================
    DATA DASHBOARD PETUGAS
