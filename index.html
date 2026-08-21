@@ -533,30 +533,41 @@
      DASHBOARD PETUGAS
 ===================================================== -->
 
-<div
-  id="dashboardPage"
-  class="container">
+<div id="dashboardPage" class="container">
 
   <h1>JEJAKKU</h1>
 
   <p>📊 DASHBOARD PETUGAS</p>
 
-
   <div class="user">
-
     👤 Petugas:
-
     <b id="namaPetugasDashboard"></b>
-
   </div>
 
+  <div class="admin-box">
+
+    <div class="label">
+      📅 Pilih Tanggal
+    </div>
+
+    <input
+      type="date"
+      id="tanggalDashboard"
+    >
+
+    <button
+      type="button"
+      onclick="tampilDataPetugas()">
+
+      🔎 TAMPILKAN DATA
+
+    </button>
+
+  </div>
 
   <div id="dashboardHasil">
-
     ⏳ Memuat data...
-
   </div>
-
 
   <button
     type="button"
@@ -567,7 +578,6 @@
   </button>
 
 </div>
-
 
 <!-- =====================================================
      DASHBOARD ADMIN
@@ -1246,54 +1256,112 @@ function simpanData() {
 
 function tampilDashboardPetugas() {
 
+  // Matikan kamera
   if (html5QrCode) {
+    html5QrCode.stop().catch(function() {});
+  }
 
-    html5QrCode
-      .stop()
-      .catch(function() {});
+  // Sembunyikan scanner
+  document.getElementById("scanPage").style.display = "none";
+
+  // Tampilkan dashboard
+  document.getElementById("dashboardPage").style.display = "block";
+
+  // Nama petugas otomatis
+  document.getElementById("namaPetugasDashboard").innerText =
+    namaUser;
+
+  // ==============================
+  // TANGGAL HARI INI
+  // ==============================
+
+  var sekarang = new Date();
+
+  var tahun = sekarang.getFullYear();
+
+  var bulan = String(
+    sekarang.getMonth() + 1
+  ).padStart(2, "0");
+
+  var tanggal = String(
+    sekarang.getDate()
+  ).padStart(2, "0");
+
+  var hariIni =
+    tahun + "-" +
+    bulan + "-" +
+    tanggal;
+
+  document.getElementById("tanggalDashboard").value =
+    hariIni;
+
+  // Tampilkan data hari ini
+  tampilDataPetugas();
+}
+
+
+// =====================================================
+// DATA DASHBOARD PETUGAS BERDASARKAN TANGGAL
+// =====================================================
+
+function tampilDataPetugas() {
+
+  var tanggal =
+    document.getElementById("tanggalDashboard").value;
+
+  var hasil =
+    document.getElementById("dashboardHasil");
+
+  if (!tanggal) {
+
+    hasil.innerHTML =
+      "❌ Silakan pilih tanggal.";
+
+    return;
 
   }
 
-
-  document
-    .getElementById("scanPage")
-    .style.display =
-      "none";
-
-
-  document
-    .getElementById("dashboardPage")
-    .style.display =
-      "block";
+  hasil.innerHTML =
+    "⏳ Memuat data " +
+    namaUser +
+    "...";
 
 
-  document
-    .getElementById("namaPetugasDashboard")
-    .innerText =
-      namaUser;
-
-
-  document
-    .getElementById("dashboardHasil")
-    .innerHTML =
-      "⏳ Memuat dashboard...";
-
-
-  fetch(
-
+  var url =
     WEB_APP_URL +
-    "?action=dashboard&t=" +
-    new Date().getTime()
+    "?action=dashboard" +
+    "&namaUser=" +
+    encodeURIComponent(namaUser) +
+    "&tanggal=" +
+    encodeURIComponent(tanggal) +
+    "&t=" +
+    new Date().getTime();
 
-  )
 
-  .then(function(response) {
+  fetch(url)
 
-    return response.json();
+    .then(function(response) {
 
-  })
+      return response.json();
 
-  .then(function(data) {
+    })
+
+    .then(function(data) {
+
+      tampilDashboardPetugasData(data);
+
+    })
+
+    .catch(function(error) {
+
+      console.error(error);
+
+      hasil.innerHTML =
+        "❌ Gagal mengambil data dashboard.";
+
+    });
+
+}
 
     tampilDashboardPetugasData(data);
 
