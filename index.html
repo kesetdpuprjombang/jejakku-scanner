@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +37,9 @@
       font-size: 18px;
     }
 
-    input {
+    input,
+    select,
+    textarea {
       width: 90%;
       max-width: 350px;
       padding: 14px;
@@ -47,6 +48,12 @@
       border-radius: 10px;
       font-size: 16px;
       background: white;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
     }
 
     button {
@@ -68,6 +75,14 @@
 
     #scanPage {
       display: none;
+    }
+
+    #formHasil {
+      display: none;
+      margin-top: 20px;
+      padding: 18px;
+      background: white;
+      border-radius: 12px;
     }
 
     #reader {
@@ -111,10 +126,30 @@
       color: #8a6a60;
       font-weight: bold;
     }
+
+    .label {
+      display: block;
+      text-align: left;
+      width: 90%;
+      max-width: 350px;
+      margin: 12px auto 2px;
+      font-weight: bold;
+    }
+
+    .qr-result {
+      background: #f7eee9;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 10px auto 15px;
+      width: 90%;
+      max-width: 350px;
+      word-break: break-word;
+    }
   </style>
 </head>
 
 <body>
+
 
 <!-- =====================================================
      LOGIN
@@ -164,16 +199,91 @@
     <b id="namaPetugas"></b>
   </div>
 
+
+  <!-- KAMERA -->
+
   <div id="reader"></div>
+
+
+  <!-- INFORMASI KAMERA -->
 
   <div id="hasil">
     📷 Menyiapkan kamera...
+  </div>
+
+
+  <!-- =================================================
+       FORM SETELAH SCAN
+  ================================================== -->
+
+  <div id="formHasil">
+
+    <h2>DATA HASIL SCAN</h2>
+
+    <div class="label">
+      Hasil QR Code
+    </div>
+
+    <div class="qr-result">
+      <b id="kodeQR"></b>
+    </div>
+
+
+    <div class="label">
+      Status
+    </div>
+
+    <select id="status">
+
+      <option value="">
+        -- Pilih Status --
+      </option>
+
+      <option value="Diterima">
+        Diterima
+      </option>
+
+      <option value="Diproses">
+        Diproses
+      </option>
+
+      <option value="Selesai">
+        Selesai
+      </option>
+
+      <option value="Dikembalikan">
+        Dikembalikan
+      </option>
+
+    </select>
+
+
+    <div class="label">
+      Keterangan
+    </div>
+
+    <textarea
+      id="keterangan"
+      placeholder="Masukkan keterangan..."
+    ></textarea>
+
+
+    <button onclick="simpanData()">
+      💾 SIMPAN DATA
+    </button>
+
+    <div
+      id="formError"
+      class="error"
+    ></div>
+
   </div>
 
 </div>
 
 
 <script>
+
 
 /* =====================================================
    GOOGLE APPS SCRIPT
@@ -188,8 +298,15 @@ const WEB_APP_URL =
 ===================================================== */
 
 let sudahScan = false;
+
+let sudahSimpan = false;
+
 let namaUser = "";
+
 let usernameAktif = "";
+
+let kodeQRhasil = "";
+
 let html5QrCode = null;
 
 
@@ -200,10 +317,16 @@ let html5QrCode = null;
 function login() {
 
   const username =
-    document.getElementById("username").value.trim();
+    document
+      .getElementById("username")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value.trim();
+    document
+      .getElementById("password")
+      .value
+      .trim();
 
   const errorBox =
     document.getElementById("loginError");
@@ -234,16 +357,22 @@ function login() {
 
 
   fetch(url, {
+
     method: "GET",
+
     redirect: "follow"
+
   })
 
   .then(function(response) {
 
     if (!response.ok) {
+
       throw new Error(
-        "Server error: " + response.status
+        "Server error: " +
+        response.status
       );
+
     }
 
     return response.json();
@@ -252,20 +381,25 @@ function login() {
 
   .then(function(result) {
 
-    console.log("HASIL LOGIN:", result);
+    console.log(
+      "HASIL LOGIN:",
+      result
+    );
 
 
     if (result.berhasil === true) {
 
       namaUser = result.nama;
 
-      usernameAktif = result.username;
+      usernameAktif =
+        result.username;
 
 
       sessionStorage.setItem(
         "jejakkuUser",
         namaUser
       );
+
 
       sessionStorage.setItem(
         "jejakkuUsername",
@@ -275,7 +409,9 @@ function login() {
 
       tampilScanner();
 
-    } else {
+    }
+
+    else {
 
       errorBox.innerHTML =
         "❌ Username atau password salah";
@@ -286,7 +422,10 @@ function login() {
 
   .catch(function(error) {
 
-    console.error("ERROR LOGIN:", error);
+    console.error(
+      "ERROR LOGIN:",
+      error
+    );
 
     errorBox.innerHTML =
       "❌ Tidak dapat terhubung ke server";
@@ -301,16 +440,28 @@ function login() {
 
 function tampilScanner() {
 
-  document.getElementById("loginPage")
+  document
+    .getElementById("loginPage")
     .style.display = "none";
 
-  document.getElementById("scanPage")
+
+  document
+    .getElementById("scanPage")
     .style.display = "block";
 
-  document.getElementById("namaPetugas")
+
+  document
+    .getElementById("namaPetugas")
     .innerText = namaUser;
 
-  document.getElementById("hasil")
+
+  document
+    .getElementById("formHasil")
+    .style.display = "none";
+
+
+  document
+    .getElementById("hasil")
     .innerHTML =
       "📷 Meminta izin kamera...";
 
@@ -331,8 +482,18 @@ function mulaiScanner() {
 
   sudahScan = false;
 
-  document.getElementById("reader")
+  sudahSimpan = false;
+
+
+  document
+    .getElementById("formHasil")
+    .style.display = "none";
+
+
+  document
+    .getElementById("reader")
     .innerHTML = "";
+
 
   html5QrCode =
     new Html5Qrcode("reader");
@@ -358,16 +519,20 @@ function mulaiScanner() {
     berhasilScan,
 
     function(errorMessage) {
+
       // Error pembacaan QR diabaikan
+
     }
 
   )
 
   .then(function() {
 
-    document.getElementById("hasil")
+    document
+      .getElementById("hasil")
       .innerHTML =
-        "📷 <b>KAMERA AKTIF</b><br><br>" +
+        "📷 <b>KAMERA AKTIF</b>" +
+        "<br><br>" +
         "Arahkan kamera ke QR Code";
 
   })
@@ -379,7 +544,8 @@ function mulaiScanner() {
       error
     );
 
-    document.getElementById("hasil")
+    document
+      .getElementById("hasil")
       .innerHTML =
         "❌ <b>KAMERA TIDAK DAPAT DIAKSES</b>" +
         "<br><br>" +
@@ -399,15 +565,18 @@ function berhasilScan(kodeQR) {
     return;
   }
 
+
   sudahScan = true;
+
+  kodeQRhasil = kodeQR;
 
 
   /* HENTIKAN KAMERA */
 
   if (html5QrCode) {
 
-    html5QrCode.stop()
-
+    html5QrCode
+      .stop()
       .then(function() {
 
         console.log(
@@ -415,7 +584,6 @@ function berhasilScan(kodeQR) {
         );
 
       })
-
       .catch(function(error) {
 
         console.log(
@@ -424,31 +592,132 @@ function berhasilScan(kodeQR) {
         );
 
       });
+
   }
 
 
-  /* TAMPILKAN QR */
+  /* TAMPILKAN HASIL */
 
-  document.getElementById("hasil")
+  document
+    .getElementById("hasil")
     .innerHTML =
-      "✅ <b>QR TERBACA</b>" +
-      "<br><br>" +
-      "<b>" +
-      kodeQR +
-      "</b>" +
-      "<br><br>" +
-      "⏳ Menyimpan data...";
+      "✅ <b>QR TERBACA</b>";
 
 
-  /* DATA */
+  document
+    .getElementById("kodeQR")
+    .innerText =
+      kodeQR;
+
+
+  document
+    .getElementById("status")
+    .value = "";
+
+
+  document
+    .getElementById("keterangan")
+    .value = "";
+
+
+  document
+    .getElementById("formError")
+    .innerHTML = "";
+
+
+  document
+    .getElementById("formHasil")
+    .style.display = "block";
+
+
+  /*
+     Scroll ke form
+  */
+
+  document
+    .getElementById("formHasil")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+}
+
+
+/* =====================================================
+   SIMPAN DATA
+===================================================== */
+
+function simpanData() {
+
+  if (sudahSimpan) {
+    return;
+  }
+
+
+  const status =
+    document
+      .getElementById("status")
+      .value;
+
+
+  const keterangan =
+    document
+      .getElementById("keterangan")
+      .value
+      .trim();
+
+
+  const formError =
+    document
+      .getElementById("formError");
+
+
+  /* CEK STATUS */
+
+  if (!status) {
+
+    formError.innerHTML =
+      "❌ Silakan pilih status";
+
+    return;
+  }
+
+
+  /* CEK KETERANGAN */
+
+  if (!keterangan) {
+
+    formError.innerHTML =
+      "❌ Silakan isi keterangan";
+
+    return;
+  }
+
+
+  sudahSimpan = true;
+
+
+  formError.innerHTML =
+    "<span class='loading'>" +
+    "⏳ Menyimpan data..." +
+    "</span>";
+
 
   const data = {
 
-    kodeQR: kodeQR,
+    kodeQR:
+      kodeQRhasil,
 
-    namaUser: namaUser,
+    namaUser:
+      namaUser,
 
-    username: usernameAktif
+    username:
+      usernameAktif,
+
+    status:
+      status,
+
+    keterangan:
+      keterangan
 
   };
 
@@ -462,7 +731,10 @@ function berhasilScan(kodeQR) {
     mode: "no-cors",
 
     headers: {
-      "Content-Type": "text/plain"
+
+      "Content-Type":
+        "text/plain"
+
     },
 
     body:
@@ -472,43 +744,54 @@ function berhasilScan(kodeQR) {
 
   .then(function() {
 
+
     /* BERHASIL */
 
-    document.getElementById("hasil")
+    document
+      .getElementById("formHasil")
+      .style.display = "none";
+
+
+    document
+      .getElementById("hasil")
       .innerHTML =
         "<span class='success'>" +
-        "✅ BERHASIL" +
+        "✅ DATA BERHASIL DISIMPAN" +
         "</span>" +
         "<br><br>" +
-        "Kode: <b>" +
-        kodeQR +
-        "</b>" +
-        "<br>" +
         "Petugas: <b>" +
         namaUser +
         "</b>" +
-        "<br><br>" +
-        "Data sudah masuk Google Sheet.";
+        "<br>" +
+        "Status: <b>" +
+        status +
+        "</b>";
 
 
     /*
-       TIDAK KEMBALI KE LOGIN
-
-       Setelah 1,5 detik kamera
-       langsung aktif kembali.
+       Setelah 1,5 detik,
+       kamera aktif lagi.
     */
 
     setTimeout(function() {
 
-      document.getElementById("hasil")
+      document
+        .getElementById("hasil")
         .innerHTML =
-          "📷 <b>SIAP SCAN</b><br><br>" +
+          "📷 <b>SIAP SCAN</b>" +
+          "<br><br>" +
           "Arahkan kamera ke QR Code berikutnya";
 
-      document.getElementById("reader")
+
+      document
+        .getElementById("reader")
         .innerHTML = "";
 
+
       sudahScan = false;
+
+      sudahSimpan = false;
+
 
       mulaiScanner();
 
@@ -519,23 +802,17 @@ function berhasilScan(kodeQR) {
   .catch(function(error) {
 
     console.error(
-      "GAGAL KIRIM:",
+      "GAGAL SIMPAN:",
       error
     );
 
-    document.getElementById("hasil")
-      .innerHTML =
-        "❌ <b>Gagal menyimpan data</b>" +
-        "<br><br>" +
-        "Silakan coba scan kembali.";
 
-    sudahScan = false;
+    sudahSimpan = false;
 
-    setTimeout(function() {
 
-      mulaiScanner();
-
-    }, 1500);
+    formError.innerHTML =
+      "❌ Gagal menyimpan data." +
+      "<br>Silakan coba lagi.";
 
   });
 }
@@ -544,4 +821,3 @@ function berhasilScan(kodeQR) {
 
 </body>
 </html>
-```
