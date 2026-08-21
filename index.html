@@ -104,12 +104,8 @@ function berhasilScan(kodeQR) {
       "Data dikirim ke Google Sheet.";
 
     setTimeout(function() {
-      sudahScan = false;
-
-      document.getElementById("hasil").innerHTML =
-        "Silakan scan QR berikutnya";
-
-    }, 3000);
+  location.reload();
+}, 1500);
 
   })
   .catch(function(error) {
