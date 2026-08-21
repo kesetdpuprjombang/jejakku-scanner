@@ -141,14 +141,13 @@
     }
 
 
-    #scanPage,
-    #dashboardPage,
-    #rekapPage,
-    #adminPage {
-
-      display: none;
-
-    }
+   #scanPage,
+#dashboardPage,
+#rekapPage,
+#adminPage,
+#pencarianPage {
+  display: none;
+}
 
 
     #reader {
@@ -886,7 +885,67 @@
 
 </div>
 
+</div>
 
+<!-- =====================================================
+     HALAMAN PENCARIAN KODE QR
+===================================================== -->
+
+<div id="pencarianPage" class="container">
+
+  <h1>JEJAKKU</h1>
+
+  <p>🔎 PENCARIAN KODE QR</p>
+
+  <div class="user">
+    👤 Pengguna:
+    <b id="namaPencarian"></b>
+  </div>
+
+  <div class="admin-box">
+
+    <h2>🔎 CARI KODE QR</h2>
+
+    <div class="label">
+      Masukkan Kode QR
+    </div>
+
+    <input
+      type="text"
+      id="kodeQRcari"
+      placeholder="Masukkan atau scan kode QR..."
+      autocomplete="off"
+    >
+
+    <button
+      type="button"
+      class="filter-button"
+      onclick="cariQR()">
+
+      🔎 CARI KODE QR
+
+    </button>
+
+  </div>
+
+  <div id="hasilPencarian">
+    Masukkan kode QR kemudian tekan
+    <b>CARI KODE QR</b>.
+  </div>
+
+  <button
+    type="button"
+    class="logout-button"
+    onclick="keluarAplikasi()">
+
+    🔐 KEMBALI LOGIN
+
+  </button>
+
+</div>
+
+
+<script>
 
 <script>
 
@@ -1030,18 +1089,27 @@ function login() {
       }
 
 
-      if (roleAktif === "rekap") {
+     if (roleAktif === "rekap") {
 
-        tampilRekap();
+  tampilRekap();
 
-        return;
+  return;
 
-      }
+}
 
 
-      // DEFAULT = PETUGAS
+if (roleAktif === "pencarian") {
 
-      tampilScanner();
+  tampilPencarian();
+
+  return;
+
+}
+
+
+// DEFAULT = PETUGAS
+
+tampilScanner();
 
     })
 
@@ -2666,7 +2734,251 @@ function tampilHasilAdmin(data) {
 
 }
 
+/* =====================================================
+   PENCARIAN KODE QR
+===================================================== */
 
+function tampilPencarian() {
+
+  document
+    .getElementById("loginPage")
+    .style.display = "none";
+
+  document
+    .getElementById("scanPage")
+    .style.display = "none";
+
+  document
+    .getElementById("dashboardPage")
+    .style.display = "none";
+
+  document
+    .getElementById("rekapPage")
+    .style.display = "none";
+
+  document
+    .getElementById("adminPage")
+    .style.display = "none";
+
+  document
+    .getElementById("pencarianPage")
+    .style.display = "block";
+
+
+  document
+    .getElementById("namaPencarian")
+    .innerText = namaUser;
+
+
+  document
+    .getElementById("kodeQRcari")
+    .value = "";
+
+  document
+    .getElementById("hasilPencarian")
+    .innerHTML =
+      "Masukkan kode QR kemudian tekan " +
+      "<b>CARI KODE QR</b>.";
+
+}
+
+
+/* =====================================================
+   CARI KODE QR
+===================================================== */
+
+function cariQR() {
+
+  var kodeQR =
+    document
+      .getElementById("kodeQRcari")
+      .value
+      .trim();
+
+
+  var hasil =
+    document
+      .getElementById("hasilPencarian");
+
+
+  if (!kodeQR) {
+
+    hasil.innerHTML =
+      "❌ Silakan masukkan kode QR.";
+
+    return;
+
+  }
+
+
+  hasil.innerHTML =
+    "<span class='loading'>" +
+    "⏳ Mencari kode QR..." +
+    "</span>";
+
+
+  var url =
+    WEB_APP_URL +
+
+    "?action=cariQR" +
+
+    "&kodeQR=" +
+    encodeURIComponent(kodeQR) +
+
+    "&t=" +
+    new Date().getTime();
+
+
+  fetch(url)
+
+    .then(function(response) {
+
+      return response.json();
+
+    })
+
+    .then(function(data) {
+
+      tampilHasilPencarian(data);
+
+    })
+
+    .catch(function(error) {
+
+      console.error(error);
+
+      hasil.innerHTML =
+        "❌ Gagal mengambil data.";
+
+    });
+
+}
+
+
+/* =====================================================
+   HASIL PENCARIAN
+===================================================== */
+
+function tampilHasilPencarian(data) {
+
+  var hasil =
+    document
+      .getElementById("hasilPencarian");
+
+
+  if (
+    !data.hasil ||
+    data.hasil.length === 0
+  ) {
+
+    hasil.innerHTML = `
+
+      <div class="riwayat">
+
+        ❌ <b>KODE QR TIDAK DITEMUKAN</b>
+
+        <br><br>
+
+        Kode QR:
+        <b>${escapeHTML(
+          document
+            .getElementById("kodeQRcari")
+            .value
+        )}</b>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  var html = `
+
+    <h2>📋 HASIL PENCARIAN</h2>
+
+    <div class="riwayat">
+
+      🔎 Kode QR:
+      <b>${escapeHTML(
+        data.hasil[0].kodeQR
+      )}</b>
+
+      <br><br>
+
+      📊 Jumlah riwayat:
+      <b>${data.jumlah}</b>
+
+    </div>
+
+  `;
+
+
+  data.hasil.forEach(
+    function(item) {
+
+      html += `
+
+        <div class="riwayat">
+
+          <b>📌 ${escapeHTML(
+            item.kodeQR
+          )}</b>
+
+          <br><br>
+
+          🕐 ${escapeHTML(
+            item.waktu
+          )}
+
+          <br>
+
+          👤 ${escapeHTML(
+            item.petugas
+          )}
+
+          <br>
+
+          📌 Status:
+          <b>${escapeHTML(
+            item.status
+          )}</b>
+
+          <br>
+
+          📝 ${escapeHTML(
+            item.keterangan
+          )}
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  hasil.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   AMANKAN TAMPILAN TEKS
+===================================================== */
+
+function escapeHTML(text) {
+
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
 
 /* =====================================================
    KELUAR
