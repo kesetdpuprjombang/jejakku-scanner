@@ -113,7 +113,7 @@
       margin-top: 10px;
 
       border: none;
-
+      
       border-radius: 10px;
 
       background: #d88c9a;
@@ -1055,7 +1055,81 @@ let kodeQRhasil = "";
 
 let html5QrCode = null;
 
+// =====================================================
+// KONEKSI JSONP KE GOOGLE APPS SCRIPT
+// =====================================================
 
+function requestJSONP(url, success, failed) {
+
+  var callbackName =
+    "jejakkuCallback_" +
+    Date.now() +
+    "_" +
+    Math.floor(Math.random() * 100000);
+
+  var script = document.createElement("script");
+
+  var separator =
+    url.indexOf("?") >= 0 ? "&" : "?";
+
+  var timer;
+
+  window[callbackName] = function(data) {
+
+    clearTimeout(timer);
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    delete window[callbackName];
+
+    if (typeof success === "function") {
+      success(data);
+    }
+  };
+
+  script.onerror = function() {
+
+    clearTimeout(timer);
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    delete window[callbackName];
+
+    if (typeof failed === "function") {
+      failed(
+        new Error("Server tidak dapat diakses")
+      );
+    }
+  };
+
+  script.src =
+    url +
+    separator +
+    "callback=" +
+    encodeURIComponent(callbackName);
+
+  document.body.appendChild(script);
+
+  timer = setTimeout(function() {
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    delete window[callbackName];
+
+    if (typeof failed === "function") {
+      failed(
+        new Error("Koneksi server timeout")
+      );
+    }
+
+  }, 15000);
+}
 
 /* =====================================================
    LOGIN
@@ -1081,7 +1155,6 @@ function login() {
       "❌ Username dan password wajib diisi";
 
     return;
-
   }
 
 
@@ -1102,15 +1175,15 @@ function login() {
     new Date().getTime();
 
 
-  fetch(url)
+  // =====================================================
+  // PANGGIL GOOGLE APPS SCRIPT DENGAN JSONP
+  // =====================================================
 
-    .then(function(response) {
+  requestJSONP(
 
-      return response.json();
+    url,
 
-    })
-
-    .then(function(result) {
+    function(result) {
 
       console.log(
         "HASIL LOGIN:",
@@ -1118,21 +1191,20 @@ function login() {
       );
 
 
-      if (!result.berhasil) {
+      if (!result || !result.berhasil) {
 
         errorBox.innerHTML =
           "❌ Username atau password salah";
 
         return;
-
       }
 
 
       namaUser =
-        result.nama;
+        result.nama || username;
 
       usernameAktif =
-        result.username;
+        result.username || username;
 
       roleAktif =
         result.role || "petugas";
@@ -1152,6 +1224,58 @@ function login() {
         "jejakkuRole",
         roleAktif
       );
+
+
+      // =================================================
+      // ARAHKAN SESUAI ROLE
+      // =================================================
+
+      if (roleAktif === "admin") {
+
+        tampilAdmin();
+
+        return;
+      }
+
+
+      if (roleAktif === "rekap") {
+
+        tampilRekap();
+
+        return;
+      }
+
+
+      if (roleAktif === "pencarian") {
+
+        tampilPencarian();
+
+        return;
+      }
+
+
+      // DEFAULT PETUGAS
+
+      tampilScanner();
+
+    },
+
+
+    function(error) {
+
+      console.error(
+        "ERROR LOGIN:",
+        error
+      );
+
+      errorBox.innerHTML =
+        "❌ Tidak dapat terhubung ke server";
+
+    }
+
+  );
+
+}
 
 
       // ==========================================
