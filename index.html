@@ -953,11 +953,91 @@
 ===================================================== */
 
 const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbwG9WUnSVBaa1bccVvjchz0teJ7edTLhxrYqm1iACQ4FuMYpSmlWOZR9Lv0SmqiMQM/exec";
+"https://script.google.com/macros/s/AKfycbwG9WUnSVBaa1bccVvjchz0teJ7edTLhxrYqm1iACQ4FuMYpSmlWOZR9Lv0SmqiMQM/exec";
 
+// =====================================================
+// KONEKSI SERVER JEJAKKU
+// GitHub Pages -> Google Apps Script
+// =====================================================
 
+function requestJSONP(url, success, failed) {
 
-/* =====================================================
+  var callbackName =
+    "jejakkuCallback_" +
+    Date.now() +
+    "_" +
+    Math.floor(Math.random() * 100000);
+
+  var script =
+    document.createElement("script");
+
+  var separator =
+    url.indexOf("?") >= 0
+      ? "&"
+      : "?";
+
+  var timeout;
+
+  window[callbackName] = function(data) {
+
+    clearTimeout(timeout);
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    delete window[callbackName];
+
+    if (typeof success === "function") {
+      success(data);
+    }
+
+  };
+
+  script.onerror = function() {
+
+    clearTimeout(timeout);
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    delete window[callbackName];
+
+    if (typeof failed === "function") {
+      failed(
+        new Error("Server tidak dapat diakses")
+      );
+    }
+
+  };
+
+  script.src =
+    url +
+    separator +
+    "callback=" +
+    encodeURIComponent(callbackName);
+
+  document.body.appendChild(script);
+
+  timeout = setTimeout(function() {
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    delete window[callbackName];
+
+    if (typeof failed === "function") {
+      failed(
+        new Error("Koneksi server timeout")
+      );
+    }
+
+  }, 15000);
+}
+
+/* =========================================
    VARIABEL
 ===================================================== */
 
