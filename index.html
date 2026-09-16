@@ -1144,57 +1144,7 @@ function login() {
       );
 
 
-      // =================================================
-      // ARAHKAN SESUAI ROLE
-      // =================================================
-
-      if (roleAktif === "admin") {
-
-        tampilAdmin();
-
-        return;
-      }
-
-
-      if (roleAktif === "rekap") {
-
-        tampilRekap();
-
-        return;
-      }
-
-
-      if (roleAktif === "pencarian") {
-
-        tampilPencarian();
-
-        return;
-      }
-
-
-      // DEFAULT PETUGAS
-
-      tampilScanner();
-
-    },
-
-
-    function(error) {
-
-      console.error(
-        "ERROR LOGIN:",
-        error
-      );
-
-      errorBox.innerHTML =
-        "❌ Tidak dapat terhubung ke server";
-
-    }
-
-  );
-
-}
-
+     
 
       // ==========================================
       // ARAHKAN BERDASARKAN ROLE
